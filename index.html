@@ -514,6 +514,14 @@ function delCheck(){if(S.checks.length<2){alert('You need at least one paycheck,
  toast('Deleted Paycheck '+(i+1),()=>{S.checks.splice(i,0,x);K=i;QC=0;save();R()})}
 function loanPaid(id,pay,v){const l=S.loans.find(x=>x.id==id),p=l&&l.pays.find(x=>x.id==pay);if(!p)return;p.paid=v;save();R()}
 function subPaid(id,v){const s=S.subs.find(x=>x.id==id),c=ck();if(!s)return;const ds=subDates(s,c.date,chkEnd(K));if(!ds.length)return;s.last=v?ds[ds.length-1]:stepDate(ds[0],s.f,-1);save();R()}
+// Deleting a loan: if it has payments in the budget, ask whether to remove them too.
+// Keeping them turns each one into a plain budget item, so past paychecks still add up after a loan is paid off.
+function delLoan(i){const l=S.loans[i];if(!l)return;const n=sum(S.checks,c=>c.items.filter(x=>x.loan==l.id).length);
+ let keep=false;if(n)keep=!confirm(`“${l.n}” has ${n} payment${n>1?'s':''} in your budget.\n\nOK: remove ${n>1?'them':'it'} from the budget too.\nCancel: keep ${n>1?'them as regular budget items':'it as a regular budget item'}.`);
+ const snap=new Map(S.checks.map(c=>[c,c.items]));
+ if(keep)S.checks.forEach(c=>{c.items=c.items.map(x=>x.loan!=l.id?x:{g:x.g,n:x.n,a:x.a,paid:!!x.paid,due:x.due})});
+ S.loans.splice(i,1);save();R();
+ toast('Deleted “'+l.n+'”'+(n?keep?' (budget items kept)':' and its budget items':''),()=>{S.loans.splice(Math.min(i,S.loans.length),0,l);snap.forEach((it,c)=>c.items=it);save();R()})}
 function addPay(i){const l=S.loans[i],last=l.pays.length?l.pays[l.pays.length-1].d:tdy();add('loans.'+i+'.pays',{id:uid('p'),d:stepDate(last,'Monthly',1),a:num(l.amt),paid:false})}
 function bkFile(){const n=new Date(),p=x=>String(x).padStart(2,'0'),d=iso(n),t=p(n.getHours())+'-'+p(n.getMinutes());return new File([JSON.stringify({app:LS,exported:n.toISOString(),exportedLocal:d+' '+t.replace('-',':'),data:S},null,1)],'big-minty-finances-backup-'+d+'_'+t+'.json',{type:'application/json'})}
 function exportData(){const f=bkFile(),u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);markBk()}
@@ -525,7 +533,7 @@ const ACT={
  tab:d=>goTab(d.id), gear:()=>goTab(T=='more'?'home':'more'),
  chk:d=>{K=+d.k;QC=0;R()}, next:nextCheck, delChk:delCheck,
  // generic rows
- del:d=>del(d.p,+d.i),
+ del:d=>d.p=='loans'?delLoan(+d.i):del(d.p,+d.i),
  addItem:d=>add(cp()+'.items',{g:d.g,n:'',a:0,paid:false}),
  addDed:d=>add(cp()+'.ded',{n:'',a:0,pre:+d.pre}),
  addCat:()=>add(cp()+'.cats',{id:uid('c'),n:'New category',b:0,g:'Wants',tx:[]}),
