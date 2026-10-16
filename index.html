@@ -48,7 +48,7 @@ summary{cursor:pointer;list-style:none}summary::-webkit-details-marker{display:n
 .bang{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-right:6px;border-radius:50%;background:var(--wn);color:#fff;font-weight:800;font-size:12px;line-height:1}
 
 /* ===== Inputs & buttons ===== */
-input[type=text],input[type=number],input[type=date],textarea,select{width:100%;padding:9px 10px;border:1px solid transparent;border-radius:12px;background:var(--fld);color:var(--tx);font:inherit;transition:border-color var(--fast),background var(--fast)}
+input[type=text],input[type=email],input[type=password],input[type=number],input[type=date],textarea,select{width:100%;padding:9px 10px;border:1px solid transparent;border-radius:12px;background:var(--fld);color:var(--tx);font:inherit;transition:border-color var(--fast),background var(--fast)}
 .row input[type=text],.row input[type=number],.row input[type=date],.row select{padding:7px 8px}
 input.a,input[type=number]{width:90px;flex:none;text-align:right}input[type=number]{-moz-appearance:textfield;appearance:textfield}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
 input:focus,select:focus,textarea:focus{outline:none;border-color:color-mix(in srgb,var(--pc) 60%,transparent);background:var(--card);box-shadow:0 0 0 3px color-mix(in srgb,var(--pc) 18%,transparent)}
@@ -168,6 +168,7 @@ body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 
 @media(prefers-reduced-motion:reduce){*,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#ff6a2b"/><circle cx="16" cy="16" r="12.2" fill="#ffe1c4"/><circle cx="16" cy="16" r="10.6" fill="#ff9a4d"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#ffe1c4" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#ffe1c4"/></svg><span><span class="jz">Big Juicy</span> Finance Tracker</span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div>
+<script src="sync.js"></script>
 <script>
 // =====================================================================
 // 1. CONSTANTS
@@ -237,7 +238,7 @@ function migrate(){S.set=S.set||{};for(let v=S.v||0;v<MIGRATIONS.length;v++)MIGR
 function load(){try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}if(!S)S=seed();migrate()}
 // Saving: recalculate now, write to storage a moment later (and immediately when the app is hidden or closed)
 let SVT=0;
-function flush(){clearTimeout(SVT);SVT=0;try{localStorage.setItem(LS,JSON.stringify(S))}catch(e){}}
+function flush(){clearTimeout(SVT);SVT=0;try{const t=JSON.stringify(S);localStorage.setItem(LS,t);window.CloudSync&&CloudSync.saved(t)}catch(e){}}
 const save=()=>{sync();clearTimeout(SVT);SVT=setTimeout(flush,400)};
 addEventListener('pagehide',flush);document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
 
@@ -478,6 +479,7 @@ function vSubs(){
 
 // ---- Settings ----
 function vMore(){return `<div class="card"><h2>Settings</h2><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','number','a')}</div><div class="mu" style="margin-top:12px">Appearance</div><div class="seg qm" style="margin-top:6px">${[['system','Auto'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div></div>
+ ${window.CloudSync?CloudSync.view():''}
  <div class="card"><h2>Backup & restore</h2><p class="mu">Data lives in this device's browser. Save a backup file, send it to your other device, then import it there.</p><div class="row"><button data-a="share">Share backup</button><button data-a="export">Download backup</button></div><div class="row"><button data-a="pickFile">Import backup file</button><input type="file" id="bkf" accept=".json,application/json" style="display:none" data-a="importFile"></div>
  <details style="margin-top:8px" ${O.bk?'open':''} data-o="bk"><summary class="mu">Advanced: copy/paste text</summary><textarea id="bk">${O.bk?esc(JSON.stringify(S)):''}</textarea><div class="row"><button data-a="restore">Restore from text</button><button class="x" data-a="reset">Reset</button></div></details></div>`}
 
@@ -672,4 +674,8 @@ if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventLi
 load();
 K=Math.max(0,S.checks.findLastIndex(c=>c.date<=tdy()));
 R();
+// Sync across devices (sync.js)
+window.CloudSync&&CloudSync.init({app:'budget',name:'Big Juicy',key:LS,what:'your budget',version:()=>MIGRATIONS.length,btn:'',btn2:'',
+ card:b=>`<div class="card"><h2>Sync across devices</h2>${b}</div>`,
+ apply:obj=>{if(!obj||!Array.isArray(obj.checks)||!obj.checks.length)throw 0;S=obj;migrate();save();flush();K=Math.min(K,S.checks.length-1);QC=0;QK=0;R()},render:()=>R()});
 </script></body></html>
