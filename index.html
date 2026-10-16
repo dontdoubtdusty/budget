@@ -239,6 +239,8 @@ const MIGRATIONS=[
  S=>{if(S.set.theme==null)S.set.theme=S.set.dark?'dark':'system';delete S.set.dark},
  // v3: weekly backup reminder counts from when the app was first used (or from this update)
  S=>{if(!S.set.since)S.set.since=Date.now()},
+ // v4: every loan payment gets its own id and its own budget item (old items merged all payments in a paycheck)
+ S=>{S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.id)p.id=uid('p')}));S.checks.forEach(c=>{c.items=c.items.filter(i=>!i.loan||i.pay)})},
 ];
 function migrate(){S.set=S.set||{};for(let v=S.v||0;v<MIGRATIONS.length;v++)MIGRATIONS[v](S);S.v=MIGRATIONS.length;sync()}
 function load(){try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}if(!S)S=seed();migrate()}
@@ -293,9 +295,11 @@ function syncSubs(){S.checks.forEach((c,ci)=>{const a=c.date,b=chkEnd(ci),keep=n
  S.subs.forEach(s=>{if(!subOn(s))return;const ds=subDates(s,a,b);if(!ds.length)return;keep.add(s.id);let x=c.items.find(i=>i.sub==s.id);if(!x){x={sub:s.id};c.items.push(x)}x.g='Wants';x.n=s.n;x.a=+(subAmt(s)*ds.length).toFixed(2);x.due=ds[ds.length-1];x.paid=s.last>=x.due});
  c.items=c.items.filter(i=>!i.sub||keep.has(i.sub))})}
 // Loan payments due inside a paycheck's window become linked Needs items
-function syncLoans(){S.checks.forEach((c,ci)=>{const a=c.date,b=chkEnd(ci),keep=new Set();
- S.loans.forEach(l=>{const ps=l.pays.filter(x=>x.d>=a&&x.d<b);if(!ps.length)return;keep.add(l.id);let x=c.items.find(i=>i.loan==l.id);if(!x){x={loan:l.id};c.items.push(x)}x.g='Needs';x.n=l.n;x.a=+sum(ps,p=>payAmt(l,p)).toFixed(2);x.due=ps[ps.length-1].d;x.paid=ps.every(p=>p.paid)});
- c.items=c.items.filter(i=>!i.loan||keep.has(i.loan))})}
+// (one item per payment, so two payments on the same day stay separate; paid status mirrors the payment)
+function syncLoans(){S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.id)p.id=uid('p')}));
+ S.checks.forEach((c,ci)=>{const a=c.date,b=chkEnd(ci),keep=new Set();
+ S.loans.forEach(l=>l.pays.filter(p=>p.d>=a&&p.d<b).sort((p,q)=>p.d<q.d?-1:p.d>q.d?1:0).forEach(p=>{keep.add(p.id);let x=c.items.find(i=>i.loan==l.id&&i.pay==p.id);if(!x){x={loan:l.id,pay:p.id};c.items.push(x)}x.g='Needs';x.n=l.n;x.a=+payAmt(l,p).toFixed(2);x.due=p.d;x.paid=!!p.paid}));
+ c.items=c.items.filter(i=>!i.loan||(i.pay&&keep.has(i.pay)))})}
 
 // =====================================================================
 // 7. SHARED UI PIECES
@@ -378,7 +382,7 @@ function dedCard(p,c){const rows=pre=>c.ded.map((d,i)=>!!d.pre!=pre?'':`<div cla
 const incHead=c=>`<h3><span>Extra income</span><span class="pos">${$$(calc(c).ex)}</span></h3>`;
 function extraCard(p,c){return `<div class="card">${incHead(c)}`+(XO?txForm('x','Description')+`<div class="row"><button data-a="addX">Save</button><button class="g" data-a="xCancel">Cancel</button></div>`:`<button data-a="xOpen">Add extra income</button>`)+c.extraTx.map((t,j)=>txRow(p+'.extraTx',j)).join('')+`</div>`}
 function itemRow(c,p,x,i){const row=b=>`<div class="row ed" data-dl="${p}.items" data-di="${i}">${DH}${b}</div>`;
- const linked=(a,id,tag,cls,ttl)=>row(`<input type="checkbox" ${x.paid?'checked':''} data-a="${a}" data-id="${id}"><span class="ro">${esc(x.n)}</span><span class="ro a">${$$(num(x.a))}</span><span class="tag ${cls}" title="${ttl}">${tag}</span>`);
+ const linked=(a,id,tag,cls,ttl)=>row(`<input type="checkbox" ${x.paid?'checked':''} data-a="${a}" data-id="${id}"${x.pay?` data-pay="${x.pay}"`:''}><span class="ro">${esc(x.n)}</span><span class="ro a">${$$(num(x.a))}</span><span class="tag ${cls}" title="${ttl}">${tag}</span>`);
  if(x.loan)return linked('loanPaid',x.loan,'DEBT','debt','Edit in Debt');
  if(x.sub)return linked('subPaid',x.sub,'SUB','sub','Edit in Subs');
  const j=x.cat?c.cats.findIndex(k=>k.id==x.cat):-1,q=j>=0?`${p}.cats.${j}`:`${p}.items.${i}`;
@@ -508,9 +512,9 @@ function nextCheck(){const pk=K,c=ck(),n=JSON.parse(JSON.stringify(c));n.date=ch
  toast('Started Paycheck '+(K+1),()=>{const i=S.checks.indexOf(n);if(i<0)return;S.checks.splice(i,1);K=Math.min(pk,S.checks.length-1);QC=0;save();R()})}
 function delCheck(){if(S.checks.length<2){alert('You need at least one paycheck, so this one can\'t be deleted.');return}const i=K,[x]=S.checks.splice(i,1);K=Math.min(K,S.checks.length-1);QC=0;O={};save();R();
  toast('Deleted Paycheck '+(i+1),()=>{S.checks.splice(i,0,x);K=i;QC=0;save();R()})}
-function loanPaid(id,v){const l=S.loans.find(x=>x.id==id),c=ck();if(!l)return;const b=chkEnd(K);l.pays.forEach(p=>{if(p.d>=c.date&&p.d<b)p.paid=v});save();R()}
+function loanPaid(id,pay,v){const l=S.loans.find(x=>x.id==id),p=l&&l.pays.find(x=>x.id==pay);if(!p)return;p.paid=v;save();R()}
 function subPaid(id,v){const s=S.subs.find(x=>x.id==id),c=ck();if(!s)return;const ds=subDates(s,c.date,chkEnd(K));if(!ds.length)return;s.last=v?ds[ds.length-1]:stepDate(ds[0],s.f,-1);save();R()}
-function addPay(i){const l=S.loans[i],last=l.pays.length?l.pays[l.pays.length-1].d:tdy();add('loans.'+i+'.pays',{d:stepDate(last,'Monthly',1),a:num(l.amt),paid:false})}
+function addPay(i){const l=S.loans[i],last=l.pays.length?l.pays[l.pays.length-1].d:tdy();add('loans.'+i+'.pays',{id:uid('p'),d:stepDate(last,'Monthly',1),a:num(l.amt),paid:false})}
 function bkFile(){const n=new Date(),p=x=>String(x).padStart(2,'0'),d=iso(n),t=p(n.getHours())+'-'+p(n.getMinutes());return new File([JSON.stringify({app:LS,exported:n.toISOString(),exportedLocal:d+' '+t.replace('-',':'),data:S},null,1)],'big-minty-finances-backup-'+d+'_'+t+'.json',{type:'application/json'})}
 function exportData(){const f=bkFile(),u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);markBk()}
 async function shareData(){const f=bkFile();try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Big Minty Finances Backup'});markBk()}else{exportData();alert('Sharing files is not supported here, so the backup was downloaded instead.')}}catch(e){if(e&&e.name!=='AbortError')exportData()}}
@@ -535,7 +539,7 @@ const ACT={
  addSub:()=>{const id=uid('s');O['sub'+id]=1;add('subs',{id,n:'',a:0,last:'',f:'Monthly'})},
  // budget
  carry:()=>up(cp()+'.prev',calc(S.checks[K-1]).roll.toFixed(2),'n'),
- loanPaid:(d,el)=>loanPaid(d.id,el.checked), subPaid:(d,el)=>subPaid(d.id,el.checked),
+ loanPaid:(d,el)=>loanPaid(d.id,d.pay,el.checked), subPaid:(d,el)=>subPaid(d.id,el.checked),
  paySub:d=>{S.subs[+d.i].last=d.d;save();R()},
  xOpen:()=>{XO=1;R();document.getElementById('xa')?.focus()}, xCancel:()=>{XO=0;R()},
  // new transactions
