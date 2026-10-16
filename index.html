@@ -65,7 +65,7 @@ input[type=checkbox]{-webkit-appearance:none;appearance:none;width:24px;height:2
 input[type=checkbox]::after{content:"";width:6px;height:11px;margin-top:-3px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) scale(0);transition:transform .22s cubic-bezier(.34,1.56,.64,1)}
 input[type=checkbox]:checked{background:linear-gradient(135deg,var(--pc),var(--pc2));border-color:transparent}input[type=checkbox]:checked::after{transform:rotate(45deg) scale(1)}
 input[type=checkbox].pop{animation:pop .3s cubic-bezier(.34,1.56,.64,1)}@keyframes pop{40%{transform:scale(1.22)}}
-.ed:has(>input[type=checkbox]:checked)>.ro,.ed:has(>input[type=checkbox]:checked)>input[type=text]{opacity:.5;text-decoration:line-through}
+.ed:has(>input[type=checkbox]:checked)>:is(.ro,input[type=text],input[type=number]){opacity:.5;text-decoration:line-through}.ed:has(>input[type=checkbox]:checked)>.tag{opacity:.5}
 button{background:linear-gradient(135deg,var(--pc),var(--pc2));color:#fff;border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 6px 14px -6px color-mix(in srgb,var(--pc) 70%,transparent);transition:transform .25s var(--bounce),filter .1s,background var(--fast)}
 button.g,button.x,nav button,.seg button,.gear,.dots button,.pctop>button,#toast button,.warn .row button{box-shadow:none}
 button:active{transform:scale(.93);filter:brightness(.95);transition-duration:.08s}
