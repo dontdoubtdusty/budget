@@ -625,7 +625,7 @@ function R(){const de=document.documentElement,th=S.set.theme||'system';de.datas
  document.getElementById('gear').classList.toggle('on',T=='more');
  const nb=t=>t[0]=='quick'?`<button class="qab ${T=='quick'?'on':''}"${T=='quick'?' aria-current="page"':''} data-a="tab" data-id="quick" aria-label="Add spending or income"><b>+</b><span>Add</span></button>`:`<button class="${T==t[0]?'on':''}"${T==t[0]?' aria-current="page"':''} style="--tc:${t[4]}" data-a="tab" data-id="${t[0]}"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[t[0]]}</svg><span>${t[2]}</span></button>`,qi=TABS.findIndex(t=>t[0]=='quick');
  patch(document.getElementById('nav'),`<i class="hl" aria-hidden="true"></i><div class="nh">${TABS.slice(0,qi).map(nb).join('')}</div>${nb(TABS[qi])}<div class="nh">${TABS.slice(qi+1).map(nb).join('')}</div>`);
- placeHL(T);if(!full)countUp();checkCelebrate()}
+ placeHL(T);if(!full)countUp();checkCelebrate();navSync()}
 // ---- Nav highlight: place the pill on tab `a`, or part-way (p = 0..1) toward tab `b` while swiping ----
 function hlBox(id){const nav=document.getElementById('nav'),b=nav.querySelector(`button[data-id="${id}"]`);if(!b)return null;const n=nav.getBoundingClientRect(),r=b.getBoundingClientRect(),q=id=='quick';
  return {x:r.left-n.left,y:r.top-n.top,w:r.width,h:r.height,o:q?0:1,c:q?'#ff3d71':(TABS.find(t=>t[0]==id)||[])[4]||'#ff6a2b'}}
@@ -638,6 +638,25 @@ const APP=()=>document.getElementById('app'),EZ_OUT='cubic-bezier(.4,0,1,1)',EZ_
 function slideIn(dir){const m=APP(),w=innerWidth;m.style.willChange='transform,opacity';m.style.transition='none';m.style.transform=`translate3d(${dir*Math.min(80,w*.15)}px,0,0)`;m.style.opacity='0';void m.offsetWidth;
  m.style.transition=`transform .22s ${EZ_IN},opacity .16s ease-out`;m.style.transform='translate3d(0,0,0)';m.style.opacity='1';
  setTimeout(()=>{m.style.transition='';m.style.transform='';m.style.opacity='';m.style.willChange=''},240)}
+// Levels below Home: any other tab (or Settings) 1; the extra-income form on Budget and Add > Credit card or Income add one.
+// Paging between paychecks stays out of it, so Back never steps through every paycheck you looked at.
+function navDepth(){return (T=='home'?0:1)+(T=='budget'&&XO?1:0)+(T=='quick'&&QM!='cat'?1:0)}
+function navUp(){if(T=='budget'&&XO)return ACT.xCancel();
+ if(T=='quick'&&QM!='cat')return ACT.qm({m:'cat'});
+ if(T!='home')goTab('home')}
+// ---- Phone back button (the same block in Big Saucy Recipes, Diet and Budget) ----
+// Every open layer (a popup, an editor, a sub-view, any tab but the first) has one browser-history entry,
+// so Back closes the top layer and only leaves the app from the first tab with nothing open.
+// The app says how deep it is (navDepth) and how to go up one level (navUp); R() calls navSync() after drawing.
+let HD=0,HPOP=0;   // history entries the app has added; set while the app removes its own entries
+function navSync(){if(HPOP)return;const d=navDepth();
+ if(d>HD){const ua=navigator.userActivation;if(ua&&!ua.isActive)return;   // entries added without a tap get skipped by Back, so wait for one
+  try{while(HD<d){history.pushState({nav:HD+1},'');HD++}}catch(_){}}
+ else if(d<HD){const n=HD-d;HD=d;HPOP=1;try{history.go(-n)}catch(_){HPOP=0}}}
+addEventListener('popstate',e=>{if(HPOP){HPOP=0;navSync();return}
+ const to=Math.max(0,(e.state&&e.state.nav)||0);if(to>HD){HD=to;navSync();return}   // Forward: undo it
+ let n=HD-to;HD=to;while(n-->0&&navDepth()>0)navUp();navSync()});
+['pointerup','touchend','keydown'].forEach(t=>addEventListener(t,()=>setTimeout(navSync),true));   // catch layers opened by a long press
 function goTab(id){if(id==T){scrollTo({top:0,behavior:'smooth'});return}const o=TABS.map(t=>t[0]),dir=o.indexOf(id)>o.indexOf(T)?1:-1;T=id;R();scrollTo(0,0);slideIn(T=='more'?1:dir)}
 
 // =====================================================================
