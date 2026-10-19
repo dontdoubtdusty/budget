@@ -68,7 +68,7 @@ input[type=checkbox].pop{animation:pop .3s cubic-bezier(.34,1.56,.64,1)}@keyfram
 .ed:has(>input[type=checkbox]:checked)>:is(.ro,input[type=text],input[type=number]){opacity:.5;text-decoration:line-through}.ed:has(>input[type=checkbox]:checked)>.tag{opacity:.5}
 button{background:linear-gradient(135deg,var(--pc),var(--pc2));color:#fff;border:0;border-radius:14px;padding:10px 16px;font:inherit;font-weight:800;cursor:pointer;box-shadow:0 6px 14px -6px color-mix(in srgb,var(--pc) 70%,transparent);transition:transform .25s var(--bounce),filter .1s,background var(--fast)}
 button.g,button.x,nav button,.seg button,.gear,.dots button,.pctop>button,#toast button,.warn .row button{box-shadow:none}
-button:active{transform:scale(.93);filter:brightness(.95);transition-duration:.08s}
+button:is(:active,.prs){transform:scale(.93);filter:brightness(.95);transition-duration:.08s}
 button.g{background:none;color:var(--mu);padding:8px 10px;font-weight:600}button.x{background:none;color:var(--neg);padding:8px 8px;font-weight:600}
 button.bd{border:1px solid var(--bd);color:var(--tx)}
 .seg{display:flex;gap:6px}.seg button{flex:1;background:var(--card);color:var(--tx);border:1px solid var(--bd)}
@@ -84,7 +84,7 @@ button.bd{border:1px solid var(--bd);color:var(--tx)}
 nav{position:fixed;z-index:6;left:0;right:0;bottom:0;display:flex;align-items:center;gap:2px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);border-top:1px solid var(--bd);padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))}
 nav button{flex:1;min-width:0;background:none;color:var(--mu);border-radius:16px;padding:6px 0 5px;font-size:11px;font-weight:500;letter-spacing:-.1px;display:flex;flex-direction:column;align-items:center;gap:2px}
 nav button{font-weight:700;transition:color .25s}nav button.on{color:var(--tc)}
-nav button:not(.qab):active{transform:none;filter:none}
+nav button:not(.qab):is(:active,.prs){transform:none;filter:none}
 .nh{flex:1;display:flex;gap:2px;min-width:0;position:relative;z-index:1}.nh button{flex:1;min-width:0}.ni{width:23px;height:23px}
 /* One highlight pill that glides between tabs; the buttons themselves never move */
 .hl{position:absolute;left:0;top:0;z-index:0;pointer-events:none;border-radius:16px;width:var(--hw,0);height:var(--hh,0);transform:translate3d(var(--hx,0),var(--hy,0),0);background:color-mix(in srgb,var(--hc,#ff6a2b) 14%,transparent);opacity:var(--ho,0);transition:transform .34s var(--bounce),width .34s var(--bounce),opacity .2s,background .25s}
@@ -164,7 +164,7 @@ nav button.qab b{font:600 30px/.9 var(--fd)}nav button.qab span{font-size:9px;fo
 @keyframes fall{to{transform:translate(var(--dx),105vh) rotate(var(--r))}}
 
 /* ===== Drag to reorder ===== */
-.dh{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:34px;margin-left:-6px;color:var(--mu);opacity:.45;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}.dh:active{cursor:grabbing}
+.dh{flex:none;display:flex;align-items:center;justify-content:center;width:22px;height:34px;margin-left:-6px;color:var(--mu);opacity:.45;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}.dh:is(:active,.prs){cursor:grabbing}
 .dragging{position:relative;z-index:20;background:var(--card);border-radius:10px;box-shadow:0 10px 24px rgba(16,24,40,.18),0 0 0 1px var(--bd);transition:box-shadow .15s}.dragging .dh{opacity:1;color:var(--pc)}
 body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 
@@ -179,7 +179,7 @@ body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 
 /* ===== Logged paychecks ===== */
 .lgrow{display:flex;align-items:center;gap:12px;width:100%;background:none;color:var(--tx);box-shadow:none;border-radius:0;padding:12px 2px;text-align:left;font-weight:600}
-.lgrow+.lgrow{border-top:1px solid var(--bd)}.lgrow:active{transform:none;filter:none;background:var(--fld)}
+.lgrow+.lgrow{border-top:1px solid var(--bd)}.lgrow:is(:active,.prs){transform:none;filter:none;background:var(--fld)}
 .lgrow>span{flex:1;min-width:0;display:flex;flex-direction:column}.lgrow .mu{font-weight:500}.lgrow>b{white-space:nowrap}.lgrow>i{font-style:normal;color:var(--mu);font-size:20px}
 .rob{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--mu);background:var(--fld);border-radius:99px;padding:3px 10px;margin-bottom:8px}
 .lrow{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:14px}.lrow>span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -188,6 +188,7 @@ body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 
 @media(prefers-reduced-motion:reduce){*,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
 </style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances</span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
+<script src="feedback.js"></script>
 <script src="sync.js"></script>
 <script>
 // =====================================================================
@@ -280,7 +281,7 @@ function del(p,i){const [x]=get(p).splice(i,1),nm=x&&(x.n||x.t);save();R();toast
 // Undo toast
 let TT=0,UNDO=null,UGRP='',UCNT=0;
 // grp: consecutive toasts in the same group (e.g. several quick deletes) share one Undo that reverts all of them, newest first
-function toast(msg,undo,grp){const el=document.getElementById('toast');
+function toast(msg,undo,grp){window.Feedback&&Feedback.fromToast(msg);const el=document.getElementById('toast');
  if(undo&&grp&&UNDO&&UGRP==grp){const prev=UNDO,cur=undo;undo=()=>{cur();prev()};UCNT++;msg=grp=='del'?`Deleted ${UCNT} items`:msg}else UCNT=1;
  UGRP=undo?grp||'':'';el.innerHTML=`<span>${esc(msg)}</span>${undo?'<button data-a="undo">Undo</button>':''}`;UNDO=undo||null;el.classList.add('on');clearTimeout(TT);TT=setTimeout(()=>{el.classList.remove('on');UNDO=null;UGRP=''},5000)}
 // Backup reminder: nag once a week since the last backup (or snooze), counting from first use
@@ -554,7 +555,7 @@ function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll
  if(c.cats.length)h+=`<div class="card"><h3><span>Categories</span></h3>${c.cats.map((q,j)=>{const rem=num(q.b)-spent(q);return `<div class="ln"><span>${esc(q.n)}</span><b class="${cl(rem)}">${$$(spent(q))} of ${$$(num(q.b))}</b></div>${rbar(num(q.b),rem)}${q.tx.length?`<details data-o="lg${j}" ${O['lg'+j]?'open':''}><summary class="mu">${q.tx.length} transaction${q.tx.length>1?'s':''}</summary>${q.tx.map(tx).join('')}</details>`:''}`}).join('')}</div>`;
  return h+`<button class="x" data-a="delLog" data-id="${esc(g.id)}">Remove from log</button>`}
 function vMore(){if(LV){const g=S.logs.find(y=>y.id==LV);if(g)return vLog(g);LV=null}
- return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['daynight','Day/Night'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>
+ return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['daynight','Day/Night'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>${window.Feedback?Feedback.view('qm'):''}
  <div class="sec" style="margin-top:16px">Take-home estimate</div><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','number','a')}</div></div>
  ${logsCard()}
  ${window.CloudSync?CloudSync.view():''}
@@ -776,7 +777,7 @@ const rmPeek=()=>{const p=document.getElementById('peek');if(p)p.remove()};
   if(!commit){const tr=`transform .32s ${EZ_BACK}`;mv(m,0,tr);if(p)mv(p,dir*w,`transform .3s ${EZ_IN}`);placeHL(T);setTimeout(()=>{done();rmPeek()},330);return}
   busy=true;const rem=w-Math.abs(dx),dur=Math.round(Math.max(170,Math.min(300,rem/Math.max(1.2,Math.abs(vx)*1.4)))),tr=`transform ${dur}ms cubic-bezier(.2,.8,.2,1)`;
   mv(m,-dir*w,tr);mv(p,0,tr);placeHL(to);
-  try{navigator.vibrate&&navigator.vibrate(8)}catch(_){}
+  window.Feedback&&Feedback.hap('tick')
   setTimeout(()=>{m.style.transition='none';m.style.transform='';T=to;R();scrollTo(0,0);m.style.willChange='';requestAnimationFrame(()=>{rmPeek();m.style.transition='';busy=false})},dur)};
  document.addEventListener('touchend',end,{passive:true});document.addEventListener('touchcancel',end,{passive:true});
 })();
@@ -785,7 +786,7 @@ const rmPeek=()=>{const p=document.getElementById('peek');if(p)p.remove()};
  const sibs=d=>[...d.par.children].filter(x=>x.dataset.dl==d.key);
  const flip=(els,fn)=>{const t=new Map(els.map(e=>[e,e.getBoundingClientRect().top]));fn();els.forEach(e=>{const dy=t.get(e)-e.getBoundingClientRect().top;if(!dy)return;e.style.transition='none';e.style.transform=`translateY(${dy}px)`;void e.offsetWidth;e.style.transition='transform .2s cubic-bezier(.2,.8,.2,1)';e.style.transform=''})};
  document.addEventListener('pointerdown',e=>{const h=e.target.closest('.dh');if(!h)return;const row=h.closest('[data-dl]');if(!row)return;e.preventDefault();
-  D={row,key:row.dataset.dl,par:row.parentElement,y0:e.clientY,id:e.pointerId,sy:scrollY};h.setPointerCapture(e.pointerId);row.classList.add('dragging');document.body.classList.add('dragmode');try{navigator.vibrate&&navigator.vibrate(10)}catch(_){}});
+  D={row,key:row.dataset.dl,par:row.parentElement,y0:e.clientY,id:e.pointerId,sy:scrollY};h.setPointerCapture(e.pointerId);row.classList.add('dragging');document.body.classList.add('dragmode');window.Feedback&&Feedback.hap('tick')});
  document.addEventListener('pointermove',e=>{if(!D||e.pointerId!=D.id)return;e.preventDefault();
   const r=D.row,dy=e.clientY-D.y0+(scrollY-D.sy);r.style.transform=`translateY(${dy}px)`;
   const ss=sibs(D).filter(x=>x!=r),y=e.clientY;let moved=false;
