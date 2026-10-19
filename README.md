@@ -5,6 +5,7 @@ Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big a
 ## Features
 
 - A budget for each paycheck, with pay, deductions, extra income, rollover and adjustments
+- Logged paychecks: when you delete a paycheck you can keep a read-only copy under **Settings → Logged paychecks**. Each one is removed automatically six months after its pay date.
 - Needs, wants and savings tracked against a 50/30/20 split
 - Spending categories with their own budgets, and an Add tab for logging spending, card charges and income quickly
 - Bank accounts with deposits, withdrawals and monthly change

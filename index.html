@@ -168,8 +168,26 @@ nav button.qab b{font:600 30px/.9 var(--fd)}nav button.qab span{font-size:9px;fo
 .dragging{position:relative;z-index:20;background:var(--card);border-radius:10px;box-shadow:0 10px 24px rgba(16,24,40,.18),0 0 0 1px var(--bd);transition:box-shadow .15s}.dragging .dh{opacity:1;color:var(--pc)}
 body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 
+/* ===== Popup (choice dialog) ===== */
+#dlg{position:fixed;inset:0;z-index:35;display:grid;place-items:end center;padding:16px 16px calc(16px + env(safe-area-inset-bottom,0px));background:rgba(16,8,22,.45);animation:dfade .18s ease-out}
+#dlg[hidden]{display:none}
+.dbox{width:100%;max-width:420px;background:var(--card);border:1px solid var(--bd);border-radius:24px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);animation:dup .28s cubic-bezier(.16,1,.3,1)}
+.dbox h3{margin:0 0 6px;font:600 20px/1.2 var(--fd);color:var(--tx)}.dbox p{margin:0 0 16px;font-size:14px}
+.dbtns{display:flex;flex-direction:column;gap:8px}.dbtns button{width:100%;padding:12px 16px}
+@media(min-width:600px){#dlg{place-items:center}}
+@keyframes dfade{from{opacity:0}}@keyframes dup{from{transform:translateY(28px);opacity:0}}
+
+/* ===== Logged paychecks ===== */
+.lgrow{display:flex;align-items:center;gap:12px;width:100%;background:none;color:var(--tx);box-shadow:none;border-radius:0;padding:12px 2px;text-align:left;font-weight:600}
+.lgrow+.lgrow{border-top:1px solid var(--bd)}.lgrow:active{transform:none;filter:none;background:var(--fld)}
+.lgrow>span{flex:1;min-width:0;display:flex;flex-direction:column}.lgrow .mu{font-weight:500}.lgrow>b{white-space:nowrap}.lgrow>i{font-style:normal;color:var(--mu);font-size:20px}
+.rob{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;color:var(--mu);background:var(--fld);border-radius:99px;padding:3px 10px;margin-bottom:8px}
+.lrow{display:flex;gap:8px;align-items:center;padding:5px 0;font-size:14px}.lrow>span:first-child{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lrow>b{font-weight:600;white-space:nowrap}.lrow .lst{width:52px;text-align:right;flex:none}.lrow.pd>span:first-child,.lrow.pd>b{opacity:.5;text-decoration:line-through}
+.view>.lback{justify-self:start}
+
 @media(prefers-reduced-motion:reduce){*,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances</span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div>
+</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances</span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
 <script src="sync.js"></script>
 <script>
 // =====================================================================
@@ -211,6 +229,7 @@ function stepDate(d,f,n){const x=new Date(d+'T00:00');if(f=='Monthly'){const day
 // =====================================================================
 let S,T='home',K=0;                       // data, current tab, current paycheck index
 let O={},QC=0,QK=0,QM='cat',XO=0,FL='';   // UI-only: open <details>, quick-add selections, extra-income form open, flash message
+let LV=null,DLG=null;                     // UI-only: logged paycheck open in Settings (its id), open popup
 
 // Generic defaults: used for brand-new installs (and to fill gaps in very old saved data)
 const DED=()=>[];
@@ -219,7 +238,7 @@ const CATS=(i,d)=>[['Groceries',0,'Needs'],['Fun money',0,'Wants']].map(([n,b,g]
 function seed(){const d=tdy();
  return {set:{pct:81.5,welcome:1,since:Date.now()},
  checks:[{ded:[],date:d,rate:0,hours:80,net:0,extra:0,extraTx:[],prev:0,adj:0,items:[],cats:CATS(0,d)}],
- acc:[{n:'Checking',tx:[]}],cards:[],loans:[],subs:[]}}
+ acc:[{n:'Checking',tx:[]}],cards:[],loans:[],subs:[],logs:[]}}
 
 // Schema migrations. S.v records how many have run. To change the data shape later,
 // ADD a new function to the end of this list — never edit an old one.
@@ -241,8 +260,10 @@ const MIGRATIONS=[
  S=>{if(!S.set.since)S.set.since=Date.now()},
  // v4: every loan payment gets its own id and its own budget item (old items merged all payments in a paycheck)
  S=>{S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.id)p.id=uid('p')}));S.checks.forEach(c=>{c.items=c.items.filter(i=>!i.loan||i.pay)})},
+ // v5: logged paychecks (read-only copies of deleted paychecks)
+ S=>{if(!Array.isArray(S.logs))S.logs=[]},
 ];
-function migrate(){S.set=S.set||{};for(let v=S.v||0;v<MIGRATIONS.length;v++)MIGRATIONS[v](S);S.v=MIGRATIONS.length;sync()}
+function migrate(){S.set=S.set||{};for(let v=S.v||0;v<MIGRATIONS.length;v++)MIGRATIONS[v](S);S.v=MIGRATIONS.length;pruneLogs();sync()}
 function load(){try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}if(!S)S=seed();migrate()}
 // Saving: recalculate now, write to storage a moment later (and immediately when the app is hidden or closed)
 let SVT=0,SVFAIL=0;
@@ -271,6 +292,18 @@ const bkNag=()=>needBk()?`<div class="card wide"><h3><span>Back up your budget?<
 // 5. CALCULATIONS (pure reads of S)
 // =====================================================================
 const chkEnd=i=>{const n=S.checks[i+1];return n?n.date:stepDate(S.checks[i].date,'Bi-Weekly',1)}; // first day after paycheck i's window
+// Logged paychecks: frozen copies of deleted paychecks, removed six months after their pay date.
+// Nothing recalculates or syncs them (sync() only walks S.checks), so they stay exactly as they were.
+const LOG_MO=6;
+const logCut=()=>stepDate(tdy(),'Monthly',-LOG_MO);   // pay dates before this have expired
+const logExp=g=>stepDate(g.c.date,'Monthly',LOG_MO);   // the day a logged paycheck is removed
+const logEndDay=g=>{const e=new Date(g.end+'T00:00');e.setDate(e.getDate()-1);return iso(e)};
+function pruneLogs(){if(!Array.isArray(S.logs))return false;const n=S.logs.length,cut=logCut();S.logs=S.logs.filter(g=>g&&g.c&&g.c.date>=cut);return S.logs.length!=n}
+// Snapshot paycheck i (call before removing it). tp: what was still unpaid, loan payments included, as [name, amount]
+function logOf(i){const c=JSON.parse(JSON.stringify(S.checks[i])),E=chkEnd(i),tp=[];
+ c.items.forEach(x=>{if(!x.cat&&!x.loan&&!x.paid&&num(x.a))tp.push([x.n||'Untitled',num(x.a)])});
+ S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.paid&&p.d>=c.date&&p.d<E)tp.push([l.n+' ('+fd(p.d)+')',payAmt(l,p)])}));
+ return {id:uid('g'),at:Date.now(),n:i+1,end:E,c,tp}}
 const spent=k=>sum(k.tx,t=>num(t.a));
 const accTot=a=>sum(a.tx,t=>num(t.a));
 const cOwed=c=>num(c.bal)+sum(c.tx||[],t=>num(t.a)),cAvail=c=>num(c.limit)-cOwed(c);
@@ -496,8 +529,34 @@ function vSubs(){
  +`<button data-a="addSub">+ Add subscription</button>`}
 
 // ---- Settings ----
-function vMore(){return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>
+// ---- Logged paychecks (in Settings) ----
+function logsCard(){const L=[...S.logs].sort((a,b)=>a.c.date<b.c.date?1:a.c.date>b.c.date?-1:b.at-a.at);
+ return `<div class="card"><h2>Logged paychecks</h2><p class="mu" style="margin:0 0 6px">Read-only copies of paychecks you deleted. Each one is removed six months after its pay date.</p>`
+ +(L.length?L.map(g=>`<button class="lgrow" data-a="openLog" data-id="${esc(g.id)}"><span>${fd(g.c.date)} – ${fd(logEndDay(g))}, ${new Date(g.c.date+'T00:00').getFullYear()}<span class="mu">Removed ${longDate(logExp(g))}</span></span><b class="${cl(calc(g.c).roll)}">${$$(calc(g.c).roll)}</b><i aria-hidden="true">›</i></button>`).join('')
+ :'<p class="mu" style="margin:0">None yet. When you delete a paycheck, choose Log and delete to keep a copy here.</p>')+`</div>`}
+function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll*100);
+ const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`;
+ const k=(l,v,cls)=>`<div class="k"><span class="mu">${l}</span>${N(v,cls||'','span')}</div>`;
+ const tag=x=>x.loan?'<span class="tag debt">DEBT</span>':x.sub?'<span class="tag sub">SUB</span>':x.cat?'<span class="tag">CAT</span>':'';
+ const item=x=>`<div class="lrow ${x.paid?'pd':''}"><span>${esc(x.n||'Untitled')}</span>${tag(x)}<b>${$$(num(x.a))}</b><span class="mu lst">${x.paid?'Paid':'Unpaid'}</span></div>`;
+ const tx=t=>`<div class="ln"><span>${fd(t.d)} · ${esc(t.t||'—')}</span><b>${$$(num(t.a))}</b></div>`;
+ let h=`<button class="g lback" data-a="logBack">‹ Settings</button>
+ <div class="card wide"><span class="rob">Logged · read-only</span><h2 style="margin:0">Paycheck ${g.n}</h2><div class="b">${longDate(c.date)} – ${longDate(logEndDay(g))}</div><p class="mu" style="margin:6px 0 0">Saved ${longDate(iso(new Date(g.at)))}. Removed automatically on ${longDate(logExp(g))}.</p></div>
+ <div class="tiles">${tile('Left',r.roll,lr>0?'good':lr<0?'bad':'zero')}${tile('Still to pay',tp,Math.round(tp*100)>0?'due':'good')}</div>
+ <div class="card"><h3><span>Paycheck</span></h3>${num(c.rate)?`<div class="k"><span class="mu">Rate × hours</span><span>${$$(num(c.rate))} × ${num(c.hours)} = ${$$(c.rate*c.hours)}</span></div>`:''}
+ ${k('Take-home pay',c.net)}${k('Extra income',r.ex)}${k('Prev. rollover',c.prev)}${k('Adjustments',c.adj)}<hr style="border:0;border-top:1px solid var(--bd)">
+ <div class="k"><span>Final budget</span>${N(r.budget)}</div><div class="k"><span>Expenses</span>${N(r.exp)}</div><div class="k"><span>Already paid</span>${N(r.paid,'','span')}</div><div class="k"><span>Rollover</span>${N(r.roll,cl(r.roll))}</div></div>
+ <div class="card wide"><h3><span>Where this paycheck went</span></h3>${pieSvg(c,r)}</div>
+ <div class="card"><div class="sec">50 / 30 / 20</div>${lines(G.map(x=>[x,$$(r.by[x])+' / '+$$(r.inc*TG[x]),r.by[x]>r.inc*TG[x]?'neg':'']))}${g.tp.length?`<div class="sec" style="margin-top:12px">Still to pay</div>${lines(g.tp.map(x=>[x[0],$$(x[1])]))}`:''}</div>`;
+ if(c.ded.length)h+=`<div class="card"><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3>${[true,false].map(pre=>{const L=c.ded.filter(d=>!!d.pre==pre);return L.length?`<div class="sec" style="margin-top:6px">${pre?'Pre-tax':'Post-tax'}</div>${lines(L.map(d=>[d.n||'Untitled',$$(num(d.a))]))}`:''}).join('')}</div>`;
+ if((c.extraTx||[]).length)h+=`<div class="card">${incHead(c)}${c.extraTx.map(tx).join('')}</div>`;
+ G.forEach(x=>{const L=c.items.filter(i=>i.g==x);if(L.length)h+=`<div class="card"><h3><span>${x}</span><span>${$$(r.by[x])}</span></h3>${L.map(item).join('')}</div>`});
+ if(c.cats.length)h+=`<div class="card"><h3><span>Categories</span></h3>${c.cats.map((q,j)=>{const rem=num(q.b)-spent(q);return `<div class="ln"><span>${esc(q.n)}</span><b class="${cl(rem)}">${$$(spent(q))} of ${$$(num(q.b))}</b></div>${rbar(num(q.b),rem)}${q.tx.length?`<details data-o="lg${j}" ${O['lg'+j]?'open':''}><summary class="mu">${q.tx.length} transaction${q.tx.length>1?'s':''}</summary>${q.tx.map(tx).join('')}</details>`:''}`}).join('')}</div>`;
+ return h+`<button class="x" data-a="delLog" data-id="${esc(g.id)}">Remove from log</button>`}
+function vMore(){if(LV){const g=S.logs.find(y=>y.id==LV);if(g)return vLog(g);LV=null}
+ return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>
  <div class="sec" style="margin-top:16px">Take-home estimate</div><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','number','a')}</div></div>
+ ${logsCard()}
  ${window.CloudSync?CloudSync.view():''}
  <div class="card"><h2>Backup & restore</h2><p class="mu">Everything is saved in this browser only. Download a backup now and then to keep it safe, or to move it to another device.</p>
  <p class="mu" style="font-weight:700">${S.set.lastBk?'Last backup: '+longDate(iso(new Date(S.set.lastBk))):'No backup yet.'}</p>
@@ -510,8 +569,22 @@ function vMore(){return `<div class="card"><h2>Settings</h2><div class="sec">App
 const ck=()=>S.checks[K],cp=()=>'checks.'+K;
 function nextCheck(){const pk=K,c=ck(),n=JSON.parse(JSON.stringify(c));n.date=chkEnd(K);n.prev=+calc(c).roll.toFixed(2);n.adj=0;n.extra=0;n.extraTx=[];n.items.forEach(i=>i.paid=false);n.cats.forEach(k=>k.tx=[]);S.checks.push(n);K=S.checks.length-1;QC=0;save();R();
  toast('Started Paycheck '+(K+1),()=>{const i=S.checks.indexOf(n);if(i<0)return;S.checks.splice(i,1);K=Math.min(pk,S.checks.length-1);QC=0;save();R()})}
-function delCheck(){if(S.checks.length<2){alert('You need at least one paycheck, so this one can\'t be deleted.');return}const i=K,[x]=S.checks.splice(i,1);K=Math.min(K,S.checks.length-1);QC=0;O={};save();R();
- toast('Deleted Paycheck '+(i+1),()=>{S.checks.splice(i,0,x);K=i;QC=0;save();R()})}
+// Deleting a paycheck asks whether to keep a read-only copy (a logged paycheck) in Settings first.
+function delCheck(){if(S.checks.length<2){alert('You need at least one paycheck, so this one can\'t be deleted.');return}
+ const i=K,c=S.checks[i],e=new Date(chkEnd(i)+'T00:00');e.setDate(e.getDate()-1);const old=c.date<logCut();
+ openDlg('Delete Paycheck '+(i+1)+'?',fd(c.date)+' – '+fd(iso(e))+'. '+(old?'It\'s more than six months old, so it can\'t be logged.':'Logging keeps a read-only copy in Settings until '+longDate(stepDate(c.date,'Monthly',LOG_MO))+'.'),
+  [...(old?[]:[['Log and delete','',()=>rmCheck(i,1)]]),['Delete without logging','x bd',()=>rmCheck(i,0)],['Cancel','g bd',null]])}
+function rmCheck(i,log){const g=log?logOf(i):null,[x]=S.checks.splice(i,1);if(g)S.logs.push(g);K=Math.min(K,S.checks.length-1);QC=0;O={};save();R();
+ toast((g?'Logged and deleted':'Deleted')+' Paycheck '+(i+1),()=>{S.checks.splice(i,0,x);if(g)S.logs=S.logs.filter(y=>y!==g);K=i;QC=0;save();R()})}
+function delLog(id){const g=S.logs.find(y=>y.id==id);if(!g)return;
+ openDlg('Remove this logged paycheck?','It will be gone from Settings now instead of on '+longDate(logExp(g))+'.',[['Remove','x bd',()=>{const j=S.logs.indexOf(g);if(j<0)return;S.logs.splice(j,1);if(LV==id)LV=null;save();R();scrollTo(0,0);
+  toast('Removed logged paycheck',()=>{S.logs.splice(Math.min(j,S.logs.length),0,g);save();R()})}],['Cancel','g bd',null]])}
+// ---- Popup with a choice of buttons. btns: [label, button class, callback or null to just close] ----
+function openDlg(t,msg,btns){DLG={b:btns.map(x=>x[2])};const el=document.getElementById('dlg');
+ el.innerHTML=`<div class="dbox" role="alertdialog" aria-modal="true" aria-labelledby="dlgt" aria-describedby="dlgm"><h3 id="dlgt">${esc(t)}</h3><p class="mu" id="dlgm">${esc(msg)}</p><div class="dbtns">${btns.map((x,i)=>`<button class="${x[1]}" data-a="dlgBtn" data-i="${i}">${esc(x[0])}</button>`).join('')}</div></div>`;
+ el.hidden=false;const f=el.querySelector('button');f&&f.focus();navSync()}
+function closeDlg(){if(!DLG)return;DLG=null;const el=document.getElementById('dlg');el.hidden=true;el.innerHTML='';navSync()}
+document.addEventListener('keydown',e=>{if(e.key=='Escape'&&DLG)closeDlg()});
 function loanPaid(id,pay,v){const l=S.loans.find(x=>x.id==id),p=l&&l.pays.find(x=>x.id==pay);if(!p)return;p.paid=v;save();R()}
 function subPaid(id,v){const s=S.subs.find(x=>x.id==id),c=ck();if(!s)return;const ds=subDates(s,c.date,chkEnd(K));if(!ds.length)return;s.last=v?ds[ds.length-1]:stepDate(ds[0],s.f,-1);save();R()}
 // Deleting a loan: if it has payments in the budget, ask whether to remove them too.
@@ -532,6 +605,8 @@ const ACT={
  // navigation
  tab:d=>goTab(d.id), gear:()=>goTab(T=='more'?'home':'more'),
  chk:d=>{K=+d.k;QC=0;R()}, next:nextCheck, delChk:delCheck,
+ dlgBtn:d=>{const f=DLG&&DLG.b[+d.i];closeDlg();f&&f()},
+ openLog:d=>{LV=d.id;R();scrollTo(0,0)}, logBack:()=>{LV=null;R();scrollTo(0,0)}, delLog:d=>delLog(d.id),
  // generic rows
  del:d=>d.p=='loans'?delLoan(+d.i):del(d.p,+d.i),
  addItem:d=>add(cp()+'.items',{g:d.g,n:'',a:0,paid:false}),
@@ -569,6 +644,7 @@ const ACT={
 };
 document.addEventListener('click',e=>{
  const di=e.target.closest('.dt input');if(di){try{di.showPicker()}catch(_){}}
+ if(DLG&&e.target.id=='dlg'){closeDlg();return}
  const b=e.target.closest('button[data-a]');if(b){if(b.closest('summary'))e.preventDefault();ACT[b.dataset.a](b.dataset,b)}});
 document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
  if(d.p&&d.t)up(d.p,t.type=='checkbox'?t.checked:t.value,d.t);
@@ -620,7 +696,8 @@ function checkCelebrate(){const k=K,c=S.checks[k];if(!c)return;const tp=Math.rou
 function R(){const de=document.documentElement,th=S.set.theme||'system';de.dataset.theme=th=='system'?(DARK.matches?'dark':'light'):th;
  K=Math.max(0,Math.min(K,S.checks.length-1));
  const pp=['home','budget','cats','quick'].includes(T)?PCOL[K%PCOL.length]:(TC[T]||TC.home);de.style.setProperty('--pc',pp[0]);de.style.setProperty('--pc2',pp[1]);
- const key=T+'|'+K,full=key!==RK;RK=key;NA=[];
+ if(T!='more')LV=null;
+ const key=T+'|'+K+'|'+(LV||''),full=key!==RK;RK=key;NA=[];
  patch(APP(),(T=='more'?SETTINGS:TABS.find(t=>t[0]==T))[3](),full);
  document.getElementById('gear').classList.toggle('on',T=='more');
  const nb=t=>t[0]=='quick'?`<button class="qab ${T=='quick'?'on':''}"${T=='quick'?' aria-current="page"':''} data-a="tab" data-id="quick" aria-label="Add spending or income"><b>+</b><span>Add</span></button>`:`<button class="${T==t[0]?'on':''}"${T==t[0]?' aria-current="page"':''} style="--tc:${t[4]}" data-a="tab" data-id="${t[0]}"><svg class="ni" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[t[0]]}</svg><span>${t[2]}</span></button>`,qi=TABS.findIndex(t=>t[0]=='quick');
@@ -638,10 +715,13 @@ const APP=()=>document.getElementById('app'),EZ_OUT='cubic-bezier(.4,0,1,1)',EZ_
 function slideIn(dir){const m=APP(),w=innerWidth;m.style.willChange='transform,opacity';m.style.transition='none';m.style.transform=`translate3d(${dir*Math.min(80,w*.15)}px,0,0)`;m.style.opacity='0';void m.offsetWidth;
  m.style.transition=`transform .22s ${EZ_IN},opacity .16s ease-out`;m.style.transform='translate3d(0,0,0)';m.style.opacity='1';
  setTimeout(()=>{m.style.transition='';m.style.transform='';m.style.opacity='';m.style.willChange=''},240)}
-// Levels below Home: any other tab (or Settings) 1; the extra-income form on Budget and Add > Credit card or Income add one.
+// Levels below Home: any other tab (or Settings) 1; the extra-income form on Budget, Add > Credit card or Income,
+// a logged paycheck opened in Settings, and an open popup each add one.
 // Paging between paychecks stays out of it, so Back never steps through every paycheck you looked at.
-function navDepth(){return (T=='home'?0:1)+(T=='budget'&&XO?1:0)+(T=='quick'&&QM!='cat'?1:0)}
-function navUp(){if(T=='budget'&&XO)return ACT.xCancel();
+function navDepth(){return (T=='home'?0:1)+(T=='budget'&&XO?1:0)+(T=='quick'&&QM!='cat'?1:0)+(T=='more'&&LV?1:0)+(DLG?1:0)}
+function navUp(){if(DLG)return closeDlg();
+ if(T=='more'&&LV)return ACT.logBack();
+ if(T=='budget'&&XO)return ACT.xCancel();
  if(T=='quick'&&QM!='cat')return ACT.qm({m:'cat'});
  if(T!='home')goTab('home')}
 // ---- Phone back button (the same block in Big Saucy Recipes, Diet and Budget) ----
@@ -677,7 +757,7 @@ function mkPeek(id){let p=document.getElementById('peek');
 const rmPeek=()=>{const p=document.getElementById('peek');if(p)p.remove()};
 (function(){let sx=0,sy=0,lx=0,lt=0,vx=0,ax=null,ok=false,busy=false;const W=()=>innerWidth,nav=()=>document.getElementById('nav');
  const mv=(el,x,tr)=>{el.style.transition=tr||'none';el.style.transform=`translate3d(${x}px,0,0)`};
- document.addEventListener('touchstart',e=>{const t=e.target;ok=!busy&&T!='more'&&e.touches.length==1&&!t.closest('input,select,textarea,.pcb,table,nav,header,.dh,details[open] .row');ax=null;if(!ok)return;sx=lx=e.touches[0].clientX;sy=e.touches[0].clientY;lt=performance.now();vx=0},{passive:true});
+ document.addEventListener('touchstart',e=>{const t=e.target;ok=!busy&&!DLG&&T!='more'&&e.touches.length==1&&!t.closest('input,select,textarea,.pcb,table,nav,header,.dh,details[open] .row');ax=null;if(!ok)return;sx=lx=e.touches[0].clientX;sy=e.touches[0].clientY;lt=performance.now();vx=0},{passive:true});
  document.addEventListener('touchmove',e=>{if(!ok)return;const x=e.touches[0].clientX,y=e.touches[0].clientY,dx=x-sx,dy=y-sy;
   if(ax==null){if(Math.abs(dx)<8&&Math.abs(dy)<8)return;ax=Math.abs(dx)>Math.abs(dy)*1.2?'x':'y';if(ax=='x'){APP().style.willChange='transform';nav().classList.add('drag')}}
   if(ax!='x')return;e.preventDefault();const now=performance.now();vx=.7*vx+.3*((x-lx)/Math.max(1,now-lt));lx=x;lt=now;
@@ -720,6 +800,7 @@ const rmPeek=()=>{const p=document.getElementById('peek');if(p)p.remove()};
 // =====================================================================
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 load();
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&pruneLogs()){save();R()}});   // logs can expire while the app sits open
 K=Math.max(0,S.checks.findLastIndex(c=>c.date<=tdy()));
 R();
 // Sync across devices (sync.js)
