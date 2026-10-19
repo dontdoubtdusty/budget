@@ -503,7 +503,7 @@ function ccCard(c,i){const p='cards.'+i,ow=cOwed(c),av=cAvail(c),L=num(c.limit),
  <details ${O['cc'+i]?'open':''} data-o="cc${i}" style="margin-top:6px"><summary class="mu">${c.tx.length} transaction${c.tx.length==1?'':'s'} · ${$$(ch)} charged · ${$$(pd)} paid</summary><div class="mu" style="margin-top:4px">Charges are positive, payments negative.</div>${c.tx.map((t,j)=>txRow(p+'.tx',j)).join('')}</details>
  <details ${O['ce'+i]?'open':''} data-o="ce${i}" style="margin-top:4px"><summary class="mu">Edit card</summary><div class="row">${lb('Name')}${I(p+'.n')}</div><div class="row">${lb('Limit')}${I(p+'.limit','number')}</div><div class="row">${lb('Starting balance')}${I(p+'.bal','number')}</div><div class="row">${lb('Color')}<div class="sw">${CCG.map((x,j)=>`<button class="${j==cur?'on':''}" style="background:linear-gradient(135deg,${x[0]},${x[1]})" data-a="ccCol" data-i="${i}" data-c="${j}" aria-label="Card color ${j+1}"></button>`).join('')}</div></div>${X('cards',i,'Delete card')}</details></div>`}
 function loanCard(l,i){const p='loans.'+i,lb=t=>`<span class="mu" style="width:90px">${t}</span>`;
- return `<div class="card"><h3><span>${I(p+'.n')}</span>${X('loans',i)}</h3><div class="row">${lb('Original')}${I(p+'.orig','number')}</div><div class="row">${lb('Default pmt')}${I(p+'.amt','number')}</div><div class="k"><span>Balance</span>${N(loanBal(l))}</div>`
+ return `<div class="card"><h3><span>${I(p+'.n')}</span>${X('loans',i)}</h3><div class="row">${lb('Original')}${I(p+'.orig','number')}</div><div class="row">${lb('Default pmt')}${I(p+'.amt','number')}</div><div class="row">${lb('Frequency')}<select data-p="${p}.f" data-t="s">${FREQ.map(f=>`<option ${(l.f||'Monthly')==f?'selected':''}>${f}</option>`).join('')}</select></div><div class="k"><span>Balance</span>${N(loanBal(l))}</div>`
  +l.pays.map((x,j)=>`<div class="row ed">${C(`${p}.pays.${j}.paid`)}<span class="mu" style="width:26px">#${j+1}</span>${I(`${p}.pays.${j}.d`,'date')}${I(`${p}.pays.${j}.a`,'number','a')}${X(p+'.pays',j)}</div>`).join('')
  +`<button class="g" data-a="addPay" data-i="${i}">+ Payment</button></div>`}
 function vDebt(){return `<h2>Credit cards</h2>`+S.cards.map(ccCard).join('')+`<button data-a="addCard">+ Add card</button><h2 style="margin-top:18px">Installment loans</h2>`+S.loans.map(loanCard).join('')+`<button data-a="addLoan">+ Add loan</button>`}
@@ -602,7 +602,8 @@ function delLoan(i){const l=S.loans[i];if(!l)return;const n=sum(S.checks,c=>c.it
  if(keep)S.checks.forEach(c=>{c.items=c.items.map(x=>x.loan!=l.id?x:{g:x.g,n:x.n,a:x.a,paid:!!x.paid,due:x.due})});
  S.loans.splice(i,1);save();R();
  toast('Deleted “'+l.n+'”'+(n?keep?' (budget items kept)':' and its budget items':''),()=>{S.loans.splice(Math.min(i,S.loans.length),0,l);snap.forEach((it,c)=>c.items=it);save();R()})}
-function addPay(i){const l=S.loans[i],last=l.pays.length?l.pays[l.pays.length-1].d:tdy();add('loans.'+i+'.pays',{id:uid('p'),d:stepDate(last,'Monthly',1),a:num(l.amt),paid:false})}
+// A new payment lands one period (the loan's Weekly / Bi-Weekly / Monthly frequency) after the last listed payment
+function addPay(i){const l=S.loans[i],last=l.pays.length?l.pays[l.pays.length-1].d:tdy();add('loans.'+i+'.pays',{id:uid('p'),d:stepDate(last,l.f||'Monthly',1),a:num(l.amt),paid:false})}
 function bkFile(){const n=new Date(),p=x=>String(x).padStart(2,'0'),d=iso(n),t=p(n.getHours())+'-'+p(n.getMinutes());return new File([JSON.stringify({app:LS,exported:n.toISOString(),exportedLocal:d+' '+t.replace('-',':'),data:S},null,1)],'big-minty-finances-backup-'+d+'_'+t+'.json',{type:'application/json'})}
 function exportData(){const f=bkFile(),u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),1500);markBk()}
 async function shareData(){const f=bkFile();try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Big Minty Finances Backup'});markBk()}else{exportData();alert('Sharing files is not supported here, so the backup was downloaded instead.')}}catch(e){if(e&&e.name!=='AbortError')exportData()}}
@@ -623,7 +624,7 @@ const ACT={
  addAT:d=>{const i=+d.i,s=+d.s;addTx('at'+i,S.acc[i].tx,{sign:s,t:s<0?'Withdrawal':'Deposit',then:()=>O['acc'+i]=1})},
  addAccTx:d=>add(`acc.${d.i}.tx`,{d:tdy(),t:'',a:0}),
  addCard:()=>add('cards',{n:'New card',limit:0,bal:0,tx:[]}),
- addLoan:()=>add('loans',{id:uid('l'),n:'New loan',orig:0,amt:0,pays:[]}),
+ addLoan:()=>add('loans',{id:uid('l'),n:'New loan',orig:0,amt:0,f:'Monthly',pays:[]}),
  addPay:d=>addPay(+d.i),
  ccCol:d=>up(`cards.${d.i}.col`,d.c,'n'),
  addSub:()=>{const id=uid('s');O['sub'+id]=1;add('subs',{id,n:'',a:0,last:'',f:'Monthly'})},
