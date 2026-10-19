@@ -81,19 +81,20 @@ button.bd{border:1px solid var(--bd);color:var(--tx)}
 .top .tt{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:0 44px;white-space:nowrap}.top .logo{flex:none;animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .jz{background:linear-gradient(90deg,#2fd36b,#00b844 55%,#0ea5a0);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:700}
 .gear{position:absolute;right:10px;bottom:7px;background:none;color:var(--mu);width:40px;height:40px;padding:0;display:flex;align-items:center;justify-content:center;border-radius:12px}.gear.on{color:var(--brand);background:color-mix(in srgb,var(--brand) 13%,transparent)}
-nav{position:fixed;z-index:6;left:0;right:0;bottom:0;display:flex;align-items:center;gap:2px;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);border-top:1px solid var(--bd);padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))}
-nav button{flex:1;min-width:0;background:none;color:var(--mu);border-radius:16px;padding:6px 0 5px;font-size:11px;font-weight:500;letter-spacing:-.1px;display:flex;flex-direction:column;align-items:center;gap:2px}
-nav button{font-weight:700;transition:color .25s}nav button.on{color:var(--tc)}
+nav{position:fixed;z-index:6;left:0;right:0;bottom:0;display:flex;align-items:center;gap:0;background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:saturate(1.6) blur(14px);backdrop-filter:saturate(1.6) blur(14px);border-top:1px solid var(--bd);padding:5px 6px calc(5px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1 1 0;min-width:0;background:none;color:var(--mu);border-radius:16px;padding:7px 0 5px;font-size:11px;font-weight:600;letter-spacing:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px}
+nav button>span{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.2}
+nav button{transition:color .25s}nav button.on{color:var(--tc)}
 nav button:not(.qab):is(:active,.prs){transform:none;filter:none}
-.nh{flex:1;display:flex;gap:2px;min-width:0;position:relative;z-index:1}.nh button{flex:1;min-width:0}.ni{width:23px;height:23px}
-/* One highlight pill that glides between tabs; the buttons themselves never move */
+.nh{flex:1 1 0;display:flex;gap:0;min-width:0;position:relative;z-index:1}.nh button{flex:1 1 0;min-width:0}.ni{flex:none;width:24px;height:24px}
+/* One small highlight pill that sits behind the active tab's icon only and glides between tabs; the buttons themselves never move */
 .hl{position:absolute;left:0;top:0;z-index:0;pointer-events:none;border-radius:16px;width:var(--hw,0);height:var(--hh,0);transform:translate3d(var(--hx,0),var(--hy,0),0);background:color-mix(in srgb,var(--hc,#ff6a2b) 14%,transparent);opacity:var(--ho,0);transition:transform .34s var(--bounce),width .34s var(--bounce),opacity .2s,background .25s}
 nav.drag .hl{transition:none}
 /* Neighbouring tab shown beside the current one while swiping */
 #peek{position:fixed;left:0;right:0;bottom:0;z-index:4;overflow:hidden;pointer-events:none;background:var(--bg);will-change:transform}
 #peek>.view{max-width:1100px;margin:0 auto;padding:12px}
-nav button.qab,nav button.qab.on{flex:none;width:64px;height:64px;margin:-26px 6px 0;border-radius:50%;background:linear-gradient(135deg,#ff3d71,#ff8a3d);color:#fff;padding:0;justify-content:center;gap:0;box-shadow:0 8px 20px -4px #ff3d7180;border:4px solid var(--bg)}
-nav button.qab b{font:600 30px/.9 var(--fd)}nav button.qab span{font-size:9px;font-weight:800}
+nav button.qab,nav button.qab.on{flex:none;width:60px;height:60px;margin:-24px 6px 0;border-radius:50%;background:linear-gradient(135deg,#ff3d71,#ff8a3d);color:#fff;padding:0;justify-content:center;gap:0;box-shadow:0 8px 20px -4px #ff3d7180;border:4px solid var(--bg)}
+nav button.qab b{font:600 28px/.9 var(--fd)}nav button.qab span{font-size:9px;font-weight:800;overflow:visible}
 
 /* ===== Toast ===== */
 #toast{position:fixed;z-index:30;left:50%;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:translate(-50%,16px);opacity:0;pointer-events:none;display:flex;align-items:center;gap:14px;max-width:calc(100vw - 32px);background:var(--tst);color:#fff;border-radius:18px;padding:10px 10px 10px 16px;font-size:14px;font-weight:600;box-shadow:0 10px 30px rgba(0,0,0,.25);transition:transform .22s cubic-bezier(.2,.8,.2,1),opacity .18s}
@@ -420,7 +421,7 @@ function itemRow(c,p,x,i){const row=b=>`<div class="row ed" data-dl="${p}.items"
  if(x.loan)return linked('loanPaid',x.loan,'DEBT','debt','Edit in Debt');
  if(x.sub)return linked('subPaid',x.sub,'SUB','sub','Edit in Subs');
  const j=x.cat?c.cats.findIndex(k=>k.id==x.cat):-1,q=j>=0?`${p}.cats.${j}`:`${p}.items.${i}`;
- return row(C(`${p}.items.${i}.paid`)+I(q+'.n')+I(q+(j>=0?'.b':'.a'),'number','a')+(j>=0?'<span class="tag" title="Edit in Categories">CAT</span>':X(p+'.items',i)))}
+ return row(C(`${p}.items.${i}.paid`)+I(q+'.n')+I(q+(j>=0?'.b':'.a'),'number','a')+(j>=0?'<span class="tag" title="Edit in Tags">CAT</span>':X(p+'.items',i)))}
 function vBudget(){
  const c=S.checks[K],r=calc(c),p='checks.'+K,lb=t=>`<span style="width:110px" class="mu">${t}</span>`;
  let h=`<div class="card"><h2>Paycheck ${K+1}</h2>
@@ -443,7 +444,7 @@ function vBudget(){
 
 // ---- Add ----
 function qaCat(){const cats=S.checks[K].cats;
- if(!cats.length)return `<div class="card"><h3><span>Add</span></h3><p class="mu">This paycheck has no categories yet. Add one in Categories.</p></div>`;
+ if(!cats.length)return `<div class="card"><h3><span>Add</span></h3><p class="mu">This paycheck has no categories yet. Add one in Tags.</p></div>`;
  return `<div class="card"><h3><span>Add</span><span class="mu">${$$(sum(cats,spent))} of ${$$(sum(cats,k=>num(k.b)))} spent</span></h3><div class="row"><select id="qc" data-a="qc">${opts(cats,QC)}</select></div>${txForm('q','What was it?')}<button data-a="addQ">Add expense</button>${flash()}</div>`}
 function qaCC(){
  if(!S.cards.length)return `<div class="card"><h3><span>Credit card</span></h3><p class="mu">No credit cards yet. Add one in the Debt tab.</p></div>`;
@@ -664,7 +665,7 @@ const ICON={home:'<path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0
  acc:'<path d="M3 10l9-6 9 6"/><path d="M5 10v8M9.7 10v8M14.3 10v8M19 10v8M3 21h18"/>',
  debt:'<rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 10h19M6 15h4"/>',
  subs:'<path d="M17 2l4 4-4 4"/><path d="M3 11V9a3 3 0 0 1 3-3h15"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a3 3 0 0 1-3 3H3"/>'};
-const TABS=[['home','','Home',vHome,TC.home[0]],['budget','','Budget',vBudget,TC.budget[0]],['cats','','Categories',vCats,TC.cats[0]],['quick','+','Add',vQuick,'#fff'],['acc','','Accounts',vAcc,TC.acc[0]],['debt','','Debt',vDebt,TC.debt[0]],['subs','','Subs',vSubs,TC.subs[0]]];
+const TABS=[['home','','Home',vHome,TC.home[0]],['budget','','Budget',vBudget,TC.budget[0]],['cats','','Tags',vCats,TC.cats[0]],['quick','+','Add',vQuick,'#fff'],['acc','','Banks',vAcc,TC.acc[0]],['debt','','Debt',vDebt,TC.debt[0]],['subs','','Subs',vSubs,TC.subs[0]]];
 
 // ---- Minimal DOM diff: update only what changed, so typing focus, open sections and scroll stay put ----
 let NA=[];
@@ -710,8 +711,10 @@ function R(){const de=document.documentElement,th=S.set.theme||'system';de.datas
  patch(document.getElementById('nav'),`<i class="hl" aria-hidden="true"></i><div class="nh">${TABS.slice(0,qi).map(nb).join('')}</div>${nb(TABS[qi])}<div class="nh">${TABS.slice(qi+1).map(nb).join('')}</div>`);
  placeHL(T);if(!full)countUp();checkCelebrate();navSync()}
 // ---- Nav highlight: place the pill on tab `a`, or part-way (p = 0..1) toward tab `b` while swiping ----
-function hlBox(id){const nav=document.getElementById('nav'),b=nav.querySelector(`button[data-id="${id}"]`);if(!b)return null;const n=nav.getBoundingClientRect(),r=b.getBoundingClientRect(),q=id=='quick';
- return {x:r.left-n.left,y:r.top-n.top,w:r.width,h:r.height,o:q?0:1,c:q?'#ff3d71':(TABS.find(t=>t[0]==id)||[])[4]||'#ff6a2b'}}
+function hlBox(id){const nav=document.getElementById('nav'),b=nav.querySelector(`button[data-id="${id}"]`);if(!b)return null;const n=nav.getBoundingClientRect(),br=b.getBoundingClientRect(),q=id=='quick',ic=b.querySelector('.ni'),r=ic?ic.getBoundingClientRect():br;
+ // Pill hugs the icon: up to 48px wide (never wider than the slot) and 30px tall, centred on the icon
+ const w=Math.min(48,br.width-4),h=30,cx=r.left+r.width/2-n.left,cy=r.top+r.height/2-n.top;
+ return {x:cx-w/2,y:cy-h/2,w,h,o:q?0:1,c:q?'#ff3d71':(TABS.find(t=>t[0]==id)||[])[4]||'#ff6a2b'}}
 function placeHL(a,b,p=0){const nav=document.getElementById('nav'),A=hlBox(a);if(!A){nav.style.setProperty('--ho','0');return}
  const B=b&&hlBox(b)||A,L=(u,v)=>u+(v-u)*p,s=nav.style;
  s.setProperty('--hx',L(A.x,B.x).toFixed(1)+'px');s.setProperty('--hy',L(A.y,B.y).toFixed(1)+'px');s.setProperty('--hw',L(A.w,B.w).toFixed(1)+'px');s.setProperty('--hh',L(A.h,B.h).toFixed(1)+'px');s.setProperty('--ho',L(A.o,B.o).toFixed(3));
