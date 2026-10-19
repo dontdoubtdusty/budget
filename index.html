@@ -210,7 +210,7 @@ const FREQ=['Monthly','Bi-Weekly','Weekly'];
 const num=v=>+v||0;
 const sum=(a,f)=>a.reduce((s,x)=>s+f(x),0);
 const esc=v=>String(v??'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');
-const $$=n=>(n<0?'-':'')+Math.abs(n).toLocaleString(undefined,{style:'currency',currency:'USD'});
+const $$=n=>(n<0?'-':'')+Math.abs(n).toLocaleString(undefined,{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2});
 const cl=n=>n<0?'neg':'';
 const uid=p=>p+Math.random().toString(36).slice(2,9);
 const DAY_MS=864e5;
@@ -341,9 +341,12 @@ function syncLoans(){S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.id)p.id=uid('p'
 // =====================================================================
 // Inputs bound to a data path save themselves on change (data-p / data-t: n=number, s=string, b=checkbox).
 const DT=(v,attrs)=>`<label class="dt"><span>${sd(v)}</span><input type="date" value="${esc(v||'')}" ${attrs}></label>`;
-const I=(p,t='text',c='')=>t=='date'?DT(get(p),`data-p="${p}" data-t="s"`):`<input class="${c}" type="${t}" ${t=='number'?'step="0.01" inputmode="decimal"':''} value="${esc(t=='number'?nv(get(p)):get(p))}" data-p="${p}" data-t="${t=='number'?'n':'s'}">`;
+// t='number' is a money field (always shows two decimals); t='qty' is a plain number such as hours or a percent
+const I=(p,t='text',c='')=>{if(t=='date')return DT(get(p),`data-p="${p}" data-t="s"`);const m=t=='number',q=m||t=='qty';
+ return `<input class="${c}" type="${q?'number':t}" ${q?'step="0.01" inputmode="decimal"':''}${m?' data-m="1"':''} value="${esc(m?mv(get(p)):q?nv(get(p)):get(p))}" data-p="${p}" data-t="${q?'n':'s'}">`};
 // Number fields show cents when there are any (1195.9 -> 1195.90); whole numbers stay whole (80 -> 80)
 function nv(v){const n=+v;return v===''||v==null||isNaN(n)?v:Number.isInteger(n)?String(n):n.toFixed(2)}
+function mv(v){const n=+v;return v===''||v==null||isNaN(n)?v:n.toFixed(2)}
 const C=p=>`<input type="checkbox" ${get(p)?'checked':''} data-p="${p}" data-t="b">`;
 const ICX='<svg class="ic" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>',ICK='<svg class="ic" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M3 8.5l3.2 3L13 4.5" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>',ARR=up=>`<svg class="ic" viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="${up?'M6 2l4.5 7h-9z':'M6 10L1.5 3h9z'}" fill="currentColor"/></svg>`;
 const X=(p,i,label=ICX)=>`<button class="x" data-a="del" data-p="${p}" data-i="${i}"${label==ICX?' aria-label="Delete"':''}>${label}</button>`;
@@ -359,7 +362,7 @@ const rbar=(b,rem)=>{const f=b>0?rem/b:(rem<0?-1:0),w=f<0?100:Math.min(100,Math.
 // An editable transaction row (date · description · amount · delete), optionally draggable
 const txRow=(lp,j,drag)=>`<div class="row ed"${drag?` data-dl="${lp}" data-di="${j}"`:''}>${drag?DH:''}${I(`${lp}.${j}.d`,'date')}${I(`${lp}.${j}.t`)}${I(`${lp}.${j}.a`,'number','a')}${X(lp,j)}</div>`;
 // A new-transaction form row; fields get ids <pre>d, <pre>t, <pre>a (read back by readTx)
-const txForm=(pre,ph,st='')=>`<div class="row" ${st}>${DT(tdy(),`id="${pre}d"`)}<input id="${pre}t" type="text" placeholder="${ph}"><input id="${pre}a" type="number" step="0.01" inputmode="decimal" class="a" placeholder="0.00"></div>`;
+const txForm=(pre,ph,st='')=>`<div class="row" ${st}>${DT(tdy(),`id="${pre}d"`)}<input id="${pre}t" type="text" placeholder="${ph}"><input id="${pre}a" type="number" step="0.01" inputmode="decimal" data-m="1" class="a" placeholder="0.00"></div>`;
 function readTx(pre){const g=x=>document.getElementById(pre+x),a=parseFloat(g('a').value);return a?{d:g('d').value||tdy(),t:g('t').value,a}:null}
 // Read a txForm and push it onto a list. o: {sign: force +/-, t: default description, fl: x=>flash text, then: ()=>after}
 function addTx(pre,list,o={}){const x=readTx(pre);if(!x)return;if(o.sign)x.a=o.sign*Math.abs(x.a);if(!x.t&&o.t)x.t=o.t;list.push(x);o.then&&o.then();FL=o.fl?o.fl(x):'';save();R();FL=''}
@@ -426,7 +429,7 @@ function vBudget(){
  const c=S.checks[K],r=calc(c),p='checks.'+K,lb=t=>`<span style="width:110px" class="mu">${t}</span>`;
  let h=`<div class="card"><h2>Paycheck ${K+1}</h2>
  <div class="row">${lb('Pay date')}${I(p+'.date','date')}</div>
- <div class="row">${lb('Rate / Hours')}${I(p+'.rate','number')}${I(p+'.hours','number')}</div>
+ <div class="row">${lb('Rate / Hours')}${I(p+'.rate','number')}${I(p+'.hours','qty')}</div>
  <div class="k mu"><span>Gross (rate × hours)</span><span>${$$(c.rate*c.hours)}</span></div>
  <div class="row">${lb('Take-home pay')}${I(p+'.net','number')}</div>
  <div class="mu" style="font-size:12px;margin:-2px 0 6px 118px">Est. ${$$(est(c,S.set.pct))} (${S.set.pct}% of gross after pre-tax, less post-tax)</div>
@@ -557,7 +560,7 @@ function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll
  return h+`<button class="x" data-a="delLog" data-id="${esc(g.id)}">Remove from log</button>`}
 function vMore(){if(LV){const g=S.logs.find(y=>y.id==LV);if(g)return vLog(g);LV=null}
  return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['daynight','Day/Night'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>${window.Feedback?Feedback.view('qm'):''}
- <div class="sec" style="margin-top:16px">Take-home estimate</div><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','number','a')}</div></div>
+ <div class="sec" style="margin-top:16px">Take-home estimate</div><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','qty','a')}</div></div>
  ${logsCard()}
  ${window.CloudSync?CloudSync.view():''}
  <div class="card"><h2>Backup & restore</h2><p class="mu">Everything is saved in this browser only. Download a backup now and then to keep it safe, or to move it to another device.</p>
@@ -649,6 +652,7 @@ document.addEventListener('click',e=>{
  if(DLG&&e.target.id=='dlg'){closeDlg();return}
  const b=e.target.closest('button[data-a]');if(b){if(b.closest('summary'))e.preventDefault();ACT[b.dataset.a](b.dataset,b)}});
 document.addEventListener('change',e=>{const t=e.target,d=t.dataset;
+ if(d.m&&t.value!==''&&!isNaN(+t.value))t.value=(+t.value).toFixed(2);
  if(d.p&&d.t)up(d.p,t.type=='checkbox'?t.checked:t.value,d.t);
  else if(d.a&&t.tagName!='BUTTON')ACT[d.a](d,t);
  if(t.type=='checkbox'&&t.checked&&t.isConnected){t.classList.remove('pop');void t.offsetWidth;t.classList.add('pop');setTimeout(()=>t.classList.remove('pop'),320)}});
