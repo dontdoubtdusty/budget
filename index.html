@@ -59,7 +59,9 @@ textarea{height:140px;font:12px ui-monospace,monospace}
 .ed input[type=text],.ed input[type=number],.ed .dt{background:transparent}
 @media(hover:hover){.ed input[type=text]:hover,.ed input[type=number]:hover,.ed .dt:hover{background:var(--fld)}}
 .ed input[type=text]:focus,.ed input[type=number]:focus{background:var(--card)}
-.ed input.a,.ed .ro.a{width:74px}.ed .ro{padding:7px 6px}.ed input[type=text],.ed input[type=number]{padding-left:6px;padding-right:6px}.ed button.x{padding:8px 4px}.ed{gap:6px}
+.ed input.a,.ed .ro.a{width:74px}.ed .ro.a{text-align:right;padding-right:7px}
+/* Budget item rows: the TAG / DEBT / SUB badge and the delete X share one fixed-width slot, so every amount lines up on its right edge */
+.it>.tag,.it>button.x{width:46px;flex:none;box-sizing:border-box;text-align:center;justify-content:center;padding-left:0;padding-right:0}.ed .ro{padding:7px 6px}.ed input[type=text],.ed input[type=number]{padding-left:6px;padding-right:6px}.ed button.x{padding:8px 4px}.ed{gap:6px}
 /* Checkboxes with a little pop when ticked */
 input[type=checkbox]{-webkit-appearance:none;appearance:none;width:24px;height:24px;flex:none;margin:0;border:2px solid color-mix(in srgb,var(--mu) 45%,transparent);border-radius:8px;background:var(--card);display:inline-grid;place-content:center;cursor:pointer;transition:background var(--fast),border-color var(--fast)}
 input[type=checkbox]::after{content:"";width:6px;height:11px;margin-top:-3px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) scale(0);transition:transform .22s cubic-bezier(.34,1.56,.64,1)}
@@ -419,7 +421,7 @@ function dedCard(p,c){const rows=pre=>c.ded.map((d,i)=>!!d.pre!=pre?'':`<div cla
  return `<details class="card" ${O[p]?'open':''} data-o="${p}"><summary><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3></summary><div class="mu">Pre-tax · ${$$(dsum(c,true))}</div>${rows(true)}<button class="g" data-a="addDed" data-pre="1">+ Pre-tax</button><div class="mu">Post-tax · ${$$(dsum(c,false))}</div>${rows(false)}<button class="g" data-a="addDed" data-pre="0">+ Post-tax</button><div class="mu">Pre-tax lowers taxable pay. Post-tax comes off at the end.</div></details>`}
 const incHead=c=>`<h3><span>Extra income</span><span class="pos">${$$(calc(c).ex)}</span></h3>`;
 function extraCard(p,c){return `<div class="card">${incHead(c)}`+(XO?txForm('x','Description')+`<div class="row"><button data-a="addX">Save</button><button class="g" data-a="xCancel">Cancel</button></div>`:`<button data-a="xOpen">Add extra income</button>`)+c.extraTx.map((t,j)=>txRow(p+'.extraTx',j)).join('')+`</div>`}
-function itemRow(c,p,x,i){const row=b=>`<div class="row ed" data-dl="${p}.items" data-di="${i}">${DH}${b}</div>`;
+function itemRow(c,p,x,i){const row=b=>`<div class="row ed it" data-dl="${p}.items" data-di="${i}">${DH}${b}</div>`;
  const linked=(a,id,tag,cls,ttl)=>row(`<input type="checkbox" ${x.paid?'checked':''} data-a="${a}" data-id="${id}"${x.pay?` data-pay="${x.pay}"`:''}><span class="ro">${esc(x.n)}</span><span class="ro a">${$$(num(x.a))}</span><span class="tag ${cls}" title="${ttl}">${tag}</span>`);
  if(x.loan)return linked('loanPaid',x.loan,'DEBT','debt','Edit in Debt');
  if(x.sub)return linked('subPaid',x.sub,'SUB','sub','Edit in Subs');
