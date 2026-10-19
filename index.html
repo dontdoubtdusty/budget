@@ -554,7 +554,7 @@ function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll
  if(c.cats.length)h+=`<div class="card"><h3><span>Categories</span></h3>${c.cats.map((q,j)=>{const rem=num(q.b)-spent(q);return `<div class="ln"><span>${esc(q.n)}</span><b class="${cl(rem)}">${$$(spent(q))} of ${$$(num(q.b))}</b></div>${rbar(num(q.b),rem)}${q.tx.length?`<details data-o="lg${j}" ${O['lg'+j]?'open':''}><summary class="mu">${q.tx.length} transaction${q.tx.length>1?'s':''}</summary>${q.tx.map(tx).join('')}</details>`:''}`}).join('')}</div>`;
  return h+`<button class="x" data-a="delLog" data-id="${esc(g.id)}">Remove from log</button>`}
 function vMore(){if(LV){const g=S.logs.find(y=>y.id==LV);if(g)return vLog(g);LV=null}
- return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>
+ return `<div class="card"><h2>Settings</h2><div class="sec">Appearance</div><div class="seg qm">${[['system','Auto'],['daynight','Day/Night'],['light','Light'],['dark','Dark']].map(([v,l])=>`<button class="${S.set.theme==v?'on':''}" data-a="theme" data-v="${v}">${l}</button>`).join('')}</div>
  <div class="sec" style="margin-top:16px">Take-home estimate</div><div class="mu">Estimated take-home, as a % of pay after pre-tax deductions</div><div class="row"><span class="mu">Take-home %</span>${I('set.pct','number','a')}</div></div>
  ${logsCard()}
  ${window.CloudSync?CloudSync.view():''}
@@ -686,6 +686,11 @@ function countUp(){const L=NA;NA=[];if(matchMedia('(prefers-reduced-motion: redu
  L.forEach(([el,from,to])=>{if(from===to||isNaN(from)||isNaN(to))return;const t0=performance.now(),st=()=>{if(+el.dataset.n!==to)return;const p=Math.min(1,(performance.now()-t0)/450),e=1-Math.pow(1-p,3);el.textContent=$$(Math.round((from+(to-from)*e)*100)/100);if(p<1)requestAnimationFrame(st)};requestAnimationFrame(st)})}
 
 const DARK=matchMedia('(prefers-color-scheme: dark)');DARK.addEventListener?.('change',()=>S.set.theme=='system'&&R());
+// Day/Night theme: dark from 6pm to 6am, light the rest of the day. A timer flips it on the hour while the app is open.
+const isNight=()=>{const h=new Date().getHours();return h>=18||h<6};
+const themeOf=th=>th=='system'?(DARK.matches?'dark':'light'):th=='daynight'?(isNight()?'dark':'light'):th;
+let DNT=0;function dnTimer(){clearTimeout(DNT);if(S.set.theme!='daynight')return;const n=new Date(),t=new Date(n),h=n.getHours();t.setHours(h<6?6:h<18?18:30,0,1,0);DNT=setTimeout(R,t-n)}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&S&&S.set.theme=='daynight'&&document.documentElement.dataset.theme!=themeOf('daynight'))R()});   // timers pause while the phone sleeps
 let RK='',PP={};
 function confetti(){toast('Everything is paid. Nice!');if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
  const C=['#ff6a2b','#ff3d71','#8b3ff0','#3d5afe','#17a65a','#ffb020','#00a99b'],box=document.createElement('div');box.className='confetti';
@@ -693,7 +698,7 @@ function confetti(){toast('Everything is paid. Nice!');if(matchMedia('(prefers-r
  document.body.appendChild(box);setTimeout(()=>box.remove(),3200)}
 // Celebrate only when checking something off takes "Still to pay" to zero
 function checkCelebrate(){const k=K,c=S.checks[k];if(!c)return;const tp=Math.round(toPayOf(k).tot*100),pd=Math.round(calc(c).paid*100),pv=PP[k];PP[k]={tp,pd};if(pv&&pv.tp>0&&tp==0&&pd>pv.pd)setTimeout(confetti,80)}
-function R(){const de=document.documentElement,th=S.set.theme||'system';de.dataset.theme=th=='system'?(DARK.matches?'dark':'light'):th;
+function R(){const de=document.documentElement,th=S.set.theme||'system';de.dataset.theme=themeOf(th);dnTimer();
  K=Math.max(0,Math.min(K,S.checks.length-1));
  const pp=['home','budget','cats','quick'].includes(T)?PCOL[K%PCOL.length]:(TC[T]||TC.home);de.style.setProperty('--pc',pp[0]);de.style.setProperty('--pc2',pp[1]);
  if(T!='more')LV=null;

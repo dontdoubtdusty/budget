@@ -11,7 +11,7 @@ Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big a
 - Bank accounts with deposits, withdrawals and monthly change
 - Credit cards and installment loans, with loan payments added to the paycheck they're due in
 - Subscriptions, added to the paycheck they're due in, with reminders when they come up
-- Light, dark and automatic themes
+- Light, dark and automatic themes, plus a Day/Night option that switches to dark at 6pm and back to light at 6am
 - Backups you can share, download and import, with a weekly reminder
 - Optional sync across devices with an email sign-in
 
