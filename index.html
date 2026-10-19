@@ -421,7 +421,7 @@ function itemRow(c,p,x,i){const row=b=>`<div class="row ed" data-dl="${p}.items"
  if(x.loan)return linked('loanPaid',x.loan,'DEBT','debt','Edit in Debt');
  if(x.sub)return linked('subPaid',x.sub,'SUB','sub','Edit in Subs');
  const j=x.cat?c.cats.findIndex(k=>k.id==x.cat):-1,q=j>=0?`${p}.cats.${j}`:`${p}.items.${i}`;
- return row(C(`${p}.items.${i}.paid`)+I(q+'.n')+I(q+(j>=0?'.b':'.a'),'number','a')+(j>=0?'<span class="tag" title="Edit in Tags">CAT</span>':X(p+'.items',i)))}
+ return row(C(`${p}.items.${i}.paid`)+I(q+'.n')+I(q+(j>=0?'.b':'.a'),'number','a')+(j>=0?'<span class="tag" title="Edit in Tags">TAG</span>':X(p+'.items',i)))}
 function vBudget(){
  const c=S.checks[K],r=calc(c),p='checks.'+K,lb=t=>`<span style="width:110px" class="mu">${t}</span>`;
  let h=`<div class="card"><h2>Paycheck ${K+1}</h2>
@@ -539,7 +539,7 @@ function logsCard(){const L=[...S.logs].sort((a,b)=>a.c.date<b.c.date?1:a.c.date
 function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll*100);
  const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`;
  const k=(l,v,cls)=>`<div class="k"><span class="mu">${l}</span>${N(v,cls||'','span')}</div>`;
- const tag=x=>x.loan?'<span class="tag debt">DEBT</span>':x.sub?'<span class="tag sub">SUB</span>':x.cat?'<span class="tag">CAT</span>':'';
+ const tag=x=>x.loan?'<span class="tag debt">DEBT</span>':x.sub?'<span class="tag sub">SUB</span>':x.cat?'<span class="tag">TAG</span>':'';
  const item=x=>`<div class="lrow ${x.paid?'pd':''}"><span>${esc(x.n||'Untitled')}</span>${tag(x)}<b>${$$(num(x.a))}</b><span class="mu lst">${x.paid?'Paid':'Unpaid'}</span></div>`;
  const tx=t=>`<div class="ln"><span>${fd(t.d)} · ${esc(t.t||'—')}</span><b>${$$(num(t.a))}</b></div>`;
  let h=`<button class="g lback" data-a="logBack">‹ Settings</button>
