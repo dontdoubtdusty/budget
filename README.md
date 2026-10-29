@@ -1,6 +1,6 @@
 # Big Minty Finances
 
-Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big apps, alongside [Big Saucy Recipes](https://github.com/dontdoubtdusty/cooking), [Big Skinny Health](https://github.com/dontdoubtdusty/diet), [Big Tidy Reminders](https://github.com/dontdoubtdusty/reminders), [Big Shiny Rounds](https://github.com/dontdoubtdusty/cleaning) and [Big Healthy Habits](https://github.com/dontdoubtdusty/habits). It's one file (`index.html`) with no build step and no server.
+Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big apps, alongside [Big Saucy Recipes](https://github.com/dontdoubtdusty/cooking), [Big Skinny Health](https://github.com/dontdoubtdusty/diet), [Big Tidy Reminders](https://github.com/dontdoubtdusty/reminders), [Big Shiny Rounds](https://github.com/dontdoubtdusty/cleaning) and [Big Healthy Habits](https://github.com/dontdoubtdusty/habits). You can also open it inside [Big Juicy Suite](https://github.com/dontdoubtdusty/suite), which holds all the Big apps in one place. It's one file (`index.html`) with no build step and no server.
 
 ## Features
 
