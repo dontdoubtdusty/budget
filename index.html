@@ -267,6 +267,8 @@ const MIGRATIONS=[
  S=>{S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.id)p.id=uid('p')}));S.checks.forEach(c=>{c.items=c.items.filter(i=>!i.loan||i.pay)})},
  // v5: logged paychecks (read-only copies of deleted paychecks)
  S=>{if(!Array.isArray(S.logs))S.logs=[]},
+ // v6: accounts get an archive list for history set aside by "Reset history"
+ S=>{S.acc.forEach(a=>{if(!Array.isArray(a.arch))a.arch=[]})},
 ];
 function migrate(){S.set=S.set||{};for(let v=S.v||0;v<MIGRATIONS.length;v++)MIGRATIONS[v](S);S.v=MIGRATIONS.length;pruneLogs();sync()}
 function load(){try{S=JSON.parse(localStorage.getItem(LS))}catch(e){}if(!S)S=seed();migrate()}
@@ -484,7 +486,14 @@ function accRow(a,i){const p='acc.'+i,bal=accTot(a),dm=accDelta(a,monthStart()),
  <span class="sright">${N(bal,cl(bal))}${Math.round(dm*100)?`<span class="dchip ${dm>0?'up':'down'}">${dm>0?'+':'−'}${$$(Math.abs(dm))} this mo</span>`:''}</span></summary>
  <div class="aedit">${txForm('at'+i,'What was it?')}<div class="row"><button data-a="addAT" data-i="${i}" data-s="1">Deposit</button><button class="g bd" data-a="addAT" data-i="${i}" data-s="-1">Withdraw</button></div>
  <div class="sec" style="margin-top:12px">History</div>${n?a.tx.map((t,j)=>txRow(p+'.tx',j,1)).join(''):'<div class="mu">No transactions yet.</div>'}
- <div class="sec" style="margin-top:12px">Account</div><div class="row"><span class="mu" style="width:60px">Name</span>${I(p+'.n')}</div>${X('acc',i,'Delete account')}</div></details>`}
+ ${(a.arch||[]).length?`<details style="margin-top:8px" ${O['arc'+i]?'open':''} data-o="arc${i}"><summary class="mu">Archived history · ${a.arch.length}</summary>${a.arch.map(t=>`<div class="ln"><span>${fd(t.d)}${t.t?' · '+esc(t.t):''}</span><b>${$$(num(t.a))}</b></div>`).join('')}</details>`:''}
+ <div class="sec" style="margin-top:12px">Account</div><div class="row"><span class="mu" style="width:60px">Name</span>${I(p+'.n')}</div>${n>1?`<div class="row"><button class="g bd" data-a="resetAcc" data-i="${i}">Reset history</button></div>`:''}${X('acc',i,'Delete account')}</div></details>`}
+// Reset history: set the old transactions aside in the account's archive and start over from one "Initial balance" entry equal to the current balance
+function askReset(i){const a=S.acc[i];if(!a||a.tx.length<2){toast('Nothing to reset');return}
+ openDlg('Reset history?','Archive '+a.tx.length+' transactions and start '+(a.n||'this account')+' from its current balance of '+$$(accTot(a))+'? The balance stays the same, and the old history is kept in an archive you can view here.',[['Archive and reset','x bd',()=>resetAcc(i)],['Cancel','g bd',null]])}
+function resetAcc(i){const a=S.acc[i];if(!a||a.tx.length<2)return;const old=a.tx,arch=a.arch||[],bal=+accTot(a).toFixed(2);
+ a.arch=arch.concat(old);a.tx=bal?[{d:tdy(),t:'Initial balance',a:bal}]:[];O['acc'+i]=1;save();R();
+ toast('Done. Archived '+old.length+' transactions',()=>{a.tx=old;a.arch=arch;save();R()})}
 function vAcc(){const tot=sum(S.acc,accTot),ms=monthStart(),dm=sum(S.acc,a=>accDelta(a,ms)),owed=sum(S.cards,cOwed),net=tot-owed;
  const parts=S.acc.map((a,i)=>[a,i,accTot(a)]).filter(x=>x[2]>0.005).sort((x,y)=>y[2]-x[2]),pos=sum(parts,x=>x[2]);
  const chg=Math.round(dm*100)?`<span class="${dm>0?'pos':'neg'} b">${ARR(dm>0)} ${$$(Math.abs(dm))}</span> since ${fd(ms)}`:`No change since ${fd(ms)}`;
@@ -621,7 +630,8 @@ const ACT={
  addItem:d=>add(cp()+'.items',{g:d.g,n:'',a:0,paid:false}),
  addDed:d=>add(cp()+'.ded',{n:'',a:0,pre:+d.pre}),
  addCat:()=>add(cp()+'.cats',{id:uid('c'),n:'New category',b:0,g:'Wants',tx:[]}),
- addAcc:()=>{O['acc'+S.acc.length]=1;add('acc',{n:document.getElementById('an').value.trim()||'New account',tx:[]})},
+ addAcc:()=>{O['acc'+S.acc.length]=1;add('acc',{n:document.getElementById('an').value.trim()||'New account',tx:[],arch:[]})},
+ resetAcc:d=>askReset(+d.i),
  addAT:d=>{const i=+d.i,s=+d.s;addTx('at'+i,S.acc[i].tx,{sign:s,t:s<0?'Withdrawal':'Deposit',then:()=>O['acc'+i]=1})},
  addAccTx:d=>add(`acc.${d.i}.tx`,{d:tdy(),t:'',a:0}),
  addCard:()=>add('cards',{n:'New card',limit:0,bal:0,tx:[]}),
