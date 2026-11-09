@@ -324,8 +324,10 @@ const subAmt=s=>s.f=='Bi-Weekly'?num(s.a)/2:num(s.a);
 const subOn=s=>s.last&&num(s.a)&&!S.loans.some(l=>l.n==s.n);
 // Every due date of subscription s within [a, b)
 function subDates(s,a,b){if(!s.last)return[];let n=0,g=0;while(stepDate(s.last,s.f,n)>=a&&g++<500)n--;g=0;while(stepDate(s.last,s.f,n)<a&&g++<500)n++;const r=[];g=0;let d;while((d=stepDate(s.last,s.f,n))<b&&g++<60){r.push(d);n++}return r}
-const dsum=(c,pre)=>sum(c.ded.filter(d=>!!d.pre==pre),d=>num(d.a));
-const est=(c,pc)=>(c.rate*c.hours-dsum(c,true))*pc/100-dsum(c,false);
+// A deduction's .m says what its amount means: '' = dollars, 'g' = % of gross (pre-tax) pay, 'n' = % of post-tax pay
+// (gross less pre-tax deductions, times the take-home %, before post-tax deductions come off; post-tax deductions only).
+const dAmt=(c,d)=>{const a=num(d.a);if(d.m=='g')return c.rate*c.hours*a/100;if(d.m=='n'&&!d.pre)return (c.rate*c.hours-dsum(c,true))*S.set.pct/100*a/100;return a};
+const dsum=(c,pre)=>sum(c.ded.filter(d=>!!d.pre==pre),d=>dAmt(c,d));const est=(c,pc)=>(c.rate*c.hours-dsum(c,true))*pc/100-dsum(c,false);
 function calc(c){const by={};G.forEach(x=>by[x]=sum(c.items.filter(i=>i.g==x),i=>num(i.a)));const exp=sum(G,x=>by[x]),ex=sum(c.extraTx||[],t=>num(t.a)),inc=c.net+ex;
  return{by,exp,inc,ex,budget:inc+c.prev+c.adj,roll:inc+c.prev+c.adj-exp,paid:sum(c.items.filter(i=>i.paid),i=>num(i.a))}}
 
@@ -423,8 +425,9 @@ function vHome(){
 // First-run card: shown until dismissed (or replaced by an imported backup)
 const welcome=()=>`<div class="card wide"><h3><span>Welcome to Big Minty</span><button class="g" data-a="welcomeOff" aria-label="Dismiss">${ICX}</button></h3><p class="mu" style="margin:0 0 12px">Start by entering your pay date and take-home pay. Coming from the old file? Download a backup there, then import it here.</p><div class="row"><button data-a="tab" data-id="budget">Set up my paycheck</button><button class="g bd" data-a="tab" data-id="more">Import a backup</button></div></div>`;
 // ---- Budget ----
-function dedCard(p,c){const rows=pre=>c.ded.map((d,i)=>!!d.pre!=pre?'':`<div class="row ed">${I(`${p}.ded.${i}.n`)}${I(`${p}.ded.${i}.a`,'number','a')}${X(p+'.ded',i)}</div>`).join('');
- return `<details class="card" ${O[p]?'open':''} data-o="${p}"><summary><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3></summary><div class="mu">Pre-tax · ${$$(dsum(c,true))}</div>${rows(true)}<button class="g" data-a="addDed" data-pre="1">+ Pre-tax</button><div class="mu">Post-tax · ${$$(dsum(c,false))}</div>${rows(false)}<button class="g" data-a="addDed" data-pre="0">+ Post-tax</button><div class="mu">Pre-tax lowers taxable pay. Post-tax comes off at the end.</div></details>`}
+function dedCard(p,c){const rows=pre=>c.ded.map((d,i)=>{if(!!d.pre!=pre)return '';const pc=d.m=='g'||(d.m=='n'&&!d.pre);
+  return `<div class="row ed">${I(`${p}.ded.${i}.n`)}<select style="width:auto;flex:none" aria-label="Amount type" data-p="${p}.ded.${i}.m" data-t="s"><option value="" ${d.m?'':'selected'}>$</option><option value="g" ${d.m=='g'?'selected':''}>% of gross</option>${pre?'':`<option value="n" ${d.m=='n'?'selected':''}>% of post-tax</option>`}</select>${I(`${p}.ded.${i}.a`,'number','a')}${X(p+'.ded',i)}</div>`+(pc?`<div class="mu" style="font-size:12px;margin:-2px 0 6px">= ${$$(dAmt(c,d))} this paycheck</div>`:'')}).join('');
+ return `<details class="card" ${O[p]?'open':''} data-o="${p}"><summary><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3></summary><div class="mu">Pre-tax · ${$$(dsum(c,true))}</div>${rows(true)}<button class="g" data-a="addDed" data-pre="1">+ Pre-tax</button><div class="mu">Post-tax · ${$$(dsum(c,false))}</div>${rows(false)}<button class="g" data-a="addDed" data-pre="0">+ Post-tax</button><div class="mu">Pre-tax lowers taxable pay. Post-tax comes off at the end. Percentages can be of gross pay, or (post-tax only) of pay after pre-tax deductions and tax.</div></details>`}
 const incHead=c=>`<h3><span>Extra income</span><span class="pos">${$$(calc(c).ex)}</span></h3>`;
 function extraCard(p,c){return `<div class="card">${incHead(c)}`+(XO?txForm('x','Description')+`<div class="row"><button data-a="addX">Save</button><button class="g" data-a="xCancel">Cancel</button></div>`:`<button data-a="xOpen">Add extra income</button>`)+c.extraTx.map((t,j)=>txRow(p+'.extraTx',j)).join('')+`</div>`}
 function itemRow(c,p,x,i){const row=b=>`<div class="row ed it" data-dl="${p}.items" data-di="${i}">${DH}${b}</div>`;
@@ -568,7 +571,7 @@ function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll
  <div class="k"><span>Final budget</span>${N(r.budget)}</div><div class="k"><span>Expenses</span>${N(r.exp)}</div><div class="k"><span>Already paid</span>${N(r.paid,'','span')}</div><div class="k"><span>Rollover</span>${N(r.roll,cl(r.roll))}</div></div>
  <div class="card wide"><h3><span>Where this paycheck went</span></h3>${pieSvg(c,r)}</div>
  <div class="card"><div class="sec">50 / 30 / 20</div>${lines(G.map(x=>[x,$$(r.by[x])+' / '+$$(r.inc*TG[x]),r.by[x]>r.inc*TG[x]?'neg':'']))}${g.tp.length?`<div class="sec" style="margin-top:12px">Still to pay</div>${lines(g.tp.map(x=>[x[0],$$(x[1])]))}`:''}</div>`;
- if(c.ded.length)h+=`<div class="card"><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3>${[true,false].map(pre=>{const L=c.ded.filter(d=>!!d.pre==pre);return L.length?`<div class="sec" style="margin-top:6px">${pre?'Pre-tax':'Post-tax'}</div>${lines(L.map(d=>[d.n||'Untitled',$$(num(d.a))]))}`:''}).join('')}</div>`;
+ if(c.ded.length)h+=`<div class="card"><h3><span>Payroll deductions</span><span>${$$(dsum(c,true)+dsum(c,false))}</span></h3>${[true,false].map(pre=>{const L=c.ded.filter(d=>!!d.pre==pre);return L.length?`<div class="sec" style="margin-top:6px">${pre?'Pre-tax':'Post-tax'}</div>${lines(L.map(d=>[(d.n||'Untitled')+(d.m?` (${num(d.a)}${d.m=='g'||d.pre?'% of gross':'% of post-tax'})`:''),$$(dAmt(c,d))]))}`:''}).join('')}</div>`;
  if((c.extraTx||[]).length)h+=`<div class="card">${incHead(c)}${c.extraTx.map(tx).join('')}</div>`;
  G.forEach(x=>{const L=c.items.filter(i=>i.g==x);if(L.length)h+=`<div class="card"><h3><span>${x}</span><span>${$$(r.by[x])}</span></h3>${L.map(item).join('')}</div>`});
  if(c.cats.length)h+=`<div class="card"><h3><span>Categories</span></h3>${c.cats.map((q,j)=>{const rem=num(q.b)-spent(q);return `<div class="ln"><span>${esc(q.n)}</span><b class="${cl(rem)}">${$$(spent(q))} of ${$$(num(q.b))}</b></div>${rbar(num(q.b),rem)}${q.tx.length?`<details data-o="lg${j}" ${O['lg'+j]?'open':''}><summary class="mu">${q.tx.length} transaction${q.tx.length>1?'s':''}</summary>${q.tx.map(tx).join('')}</details>`:''}`}).join('')}</div>`;
