@@ -10,7 +10,7 @@ Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big a
 - Spending categories with their own budgets, and an Add tab for logging spending, card charges and income quickly
 - Bank accounts with deposits, withdrawals and monthly change, plus **Reset history** to archive an account's old transactions and start fresh from its current balance (with Undo)
 - Credit cards and installment loans, with loan payments added to the paycheck they're due in
-- Subscriptions, added to the paycheck they're due in, with reminders when they come up
+- Subscriptions, added to the paycheck they're due in, with reminders when they come up. If a charge lands on a different day than expected, set the next charge date by hand and it moves to the right paycheck
 - Light, dark and automatic themes, plus a Day/Night option that switches to dark at 6pm and back to light at 6am
 - Light haptic ticks when you save, delete, finish or toggle something, and buttons that visibly press in on every tap. Turn haptics off under **Settings > Haptics**.
 - Backups you can share, download and import, with a weekly reminder

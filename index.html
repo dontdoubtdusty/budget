@@ -195,7 +195,7 @@ body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .view>.lback{justify-self:start}
 
 @media(prefers-reduced-motion:reduce){*,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances <span class="ver">v0.27</span></span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
+</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances <span class="ver">v0.28</span></span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
 <script src="feedback.js"></script>
 <script src="sync.js"></script>
 <script>
@@ -324,7 +324,12 @@ const moEq=s=>s.f=='Bi-Weekly'?s.a*26/12:s.f=='Weekly'?s.a*52/12:s.a;
 const subAmt=s=>s.f=='Bi-Weekly'?num(s.a)/2:num(s.a);
 const subOn=s=>s.last&&num(s.a)&&!S.loans.some(l=>l.n==s.n);
 // Every due date of subscription s within [a, b)
-function subDates(s,a,b){if(!s.last)return[];let n=0,g=0;while(stepDate(s.last,s.f,n)>=a&&g++<500)n--;g=0;while(stepDate(s.last,s.f,n)<a&&g++<500)n++;const r=[];g=0;let d;while((d=stepDate(s.last,s.f,n))<b&&g++<60){r.push(d);n++}return r}
+// Dates a subscription is projected to charge within [a,b), stepping from a start date; a start date is itself a charge date
+function subSeries(from,f,a,b){let n=0,g=0;while(stepDate(from,f,n)>=a&&g++<500)n--;g=0;while(stepDate(from,f,n)<a&&g++<500)n++;const r=[];g=0;let d;while((d=stepDate(from,f,n))<b&&g++<60){r.push(d);n++}return r}
+// A manual next-charge date only counts until it has been paid (until Last paid reaches it)
+const subOv=s=>s.last&&s.ov&&s.ov>s.last?s.ov:'';
+// Charge dates in [a,b): past ones follow Last paid, and from a manual next-charge date on the schedule restarts there
+function subDates(s,a,b){if(!s.last)return[];const ov=subOv(s);return ov?[...subSeries(s.last,s.f,a,b).filter(d=>d<=s.last),...subSeries(ov,s.f,a,b).filter(d=>d>=ov)]:subSeries(s.last,s.f,a,b)}
 // A deduction's .m says what its amount means: '' = dollars, 'g' = % of gross (pre-tax) pay, 'n' = % of post-tax pay
 // (gross less pre-tax deductions, times the take-home %, before post-tax deductions come off; post-tax deductions only).
 const dAmt=(c,d)=>{const a=num(d.a);if(d.m=='g')return c.rate*c.hours*a/100;if(d.m=='n'&&!d.pre)return (c.rate*c.hours-dsum(c,true))*S.set.pct/100*a/100;return a};
@@ -529,7 +534,7 @@ function vDebt(){return `<h2>Credit cards</h2>`+S.cards.map(ccCard).join('')+`<b
 // ---- Subscriptions ----
 const SBC=['#ff3d71','#8b3ff0','#3d5afe','#00a99b','#17a65a','#ffb020','#ff6a2b','#e8295b','#6d4cff','#7cb518'];
 const subCol=s=>{let h=0;for(const ch of (s.n||'?'))h=(h*31+ch.charCodeAt(0))>>>0;return SBC[h%SBC.length]};
-const subNext=s=>s.last?stepDate(s.last,s.f,1):'';
+const subNext=s=>s.last?subOv(s)||stepDate(s.last,s.f,1):'';
 const dayDiff=d=>Math.round((new Date(d+'T00:00')-new Date(tdy()+'T00:00'))/864e5);
 function dueChip(d){if(!d)return '<span class="dchip">Not set</span>';const n=dayDiff(d),c=n<0?'late':n<=7?'soon':'';
  const t=n<0?`${-n} day${n==-1?'':'s'} late`:n==0?'Today':n==1?'Tomorrow':n<=30?`in ${n} days`:fd(d);return `<span class="dchip ${c}">${t}</span>`}
@@ -538,6 +543,7 @@ function subRow(s,i,paid){const p='subs.'+i,nx=subNext(s),id=s.id||i,lb=t=>`<spa
  <span class="snm"><b>${esc(s.n||'New subscription')}</b><span class="mu">${esc(s.f)}${nx?' · next '+fd(nx):''}</span></span>
  <span class="sright"><b>${$$(num(s.a))}</b>${dueChip(ok?nx:'')}</span>${paid&&ok?`<button class="spaid" data-a="paySub" data-i="${i}" data-d="${nx}">Paid</button>`:''}</summary>
  <div class="sedit"><div class="row">${lb('Name')}${I(p+'.n')}</div><div class="row">${lb('Amount')}${I(p+'.a','number','a')}</div><div class="row">${lb('Last paid')}${I(p+'.last','date')}</div>
+ ${s.last?`<div class="row">${lb('Next charge')}${DT(nx,`data-p="${p}.ov" data-t="s"`)}${subOv(s)?`<button class="g bd" data-a="clearOv" data-i="${i}">Reset</button>`:''}</div>${subOv(s)?`<div class="mu" style="margin:-2px 0 4px">Adjusted by hand. Marking it paid goes back to the usual schedule.</div>`:''}`:''}
  <div class="row">${lb('Frequency')}<select data-p="${p}.f" data-t="s">${FREQ.map(f=>`<option ${s.f==f?'selected':''}>${f}</option>`).join('')}</select></div>
  <div class="mu" style="margin:4px 0">Added to Wants on the paycheck it's due in.</div>${X('subs',i,'Delete subscription')}</div></details>`}
 function vSubs(){
@@ -650,6 +656,7 @@ const ACT={
  carry:()=>up(cp()+'.prev',calc(S.checks[K-1]).roll.toFixed(2),'n'),
  loanPaid:(d,el)=>loanPaid(d.id,d.pay,el.checked), subPaid:(d,el)=>subPaid(d.id,el.checked),
  paySub:d=>{S.subs[+d.i].last=d.d;save();R()},
+ clearOv:d=>{delete S.subs[+d.i].ov;save();R()},
  xOpen:()=>{XO=1;R();document.getElementById('xa')?.focus()}, xCancel:()=>{XO=0;R()},
  // new transactions
  addX:()=>addTx('x',ck().extraTx,{then:()=>XO=0}),
