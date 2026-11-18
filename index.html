@@ -121,7 +121,7 @@ nav button.qab b{font:600 28px/.9 var(--fd)}nav button.qab span{font-size:9px;fo
 /* ===== Home tiles & donut ===== */
 .tiles{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile{position:relative;overflow:hidden;padding:14px 16px;min-width:0;color:#fff;transition:background .3s}.tile .mu{font-size:12px;color:#ffffffd9;font-weight:500}.tile b{display:block;font:600 27px/1.15 var(--fd);white-space:nowrap;margin-top:2px}
-.tile.good{background:linear-gradient(135deg,#2fd27a,#0e9f6e)}.tile.bad{background:linear-gradient(135deg,#ff5c85,#e8295b)}.tile.zero{background:linear-gradient(135deg,#a58fb5,#6f5b80)}.tile.due{background:linear-gradient(135deg,#ffb020,#ff6a2b)}
+.tile.good{background:linear-gradient(135deg,#2fd27a,#0e9f6e)}.tile.bad{background:linear-gradient(135deg,#ff5c85,#e8295b)}.tile.zero{background:linear-gradient(135deg,#a58fb5,#6f5b80)}.tile.due{background:linear-gradient(135deg,#ffb020,#ff6a2b)}.tile.bud{background:linear-gradient(135deg,#22b8cf,#3d5afe)}.tile.full{grid-column:1/-1}
 .bp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 14px}.bp div{background:color-mix(in srgb,var(--pc) 8%,var(--card));border:0;border-radius:16px;padding:10px 14px}.bp b{display:block;font:600 21px/1.2 var(--fd)}
 .pie{display:flex;gap:18px;align-items:center;max-width:620px;margin:0 auto}.pie svg{width:156px;flex:none}
 .pie circle{transition:stroke-dasharray .4s cubic-bezier(.2,.8,.2,1),stroke-dashoffset .4s cubic-bezier(.2,.8,.2,1)}
@@ -195,7 +195,7 @@ body.dragmode{user-select:none;-webkit-user-select:none;cursor:grabbing}
 .view>.lback{justify-self:start}
 
 @media(prefers-reduced-motion:reduce){*,*:after{transition-duration:.01ms!important;animation-duration:.01ms!important}}
-</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances <span class="ver">v0.28</span></span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
+</style></head><body><header class="top"><span class="tt"><svg class="logo" viewBox="0 0 32 32" width="26" height="26" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#00a83a"/><circle cx="16" cy="16" r="12.2" fill="#dcf8e5"/><circle cx="16" cy="16" r="10.6" fill="#2fd36b"/><path d="M16 6v20M6 16h20M8.6 8.6l14.8 14.8M23.4 8.6 8.6 23.4" stroke="#dcf8e5" stroke-width="1.7" stroke-linecap="round"/><circle cx="16" cy="16" r="2.2" fill="#dcf8e5"/></svg><span><span class="jz">Big Minty</span> Finances <span class="ver">v0.29.0</span></span></span><button id="gear" class="gear" aria-label="Settings" data-a="gear"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.820l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.830-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button></header><div class="vclip"><main id="app" class="view"></main></div><nav id="nav"></nav><div id="toast" role="status" aria-live="polite"></div><div id="dlg" hidden></div>
 <script src="feedback.js"></script>
 <script src="sync.js"></script>
 <script>
@@ -316,6 +316,8 @@ function logOf(i){const c=JSON.parse(JSON.stringify(S.checks[i])),E=chkEnd(i),tp
  S.loans.forEach(l=>l.pays.forEach(p=>{if(!p.paid&&p.d>=c.date&&p.d<E)tp.push([l.n+' ('+fd(p.d)+')',payAmt(l,p)])}));
  return {id:uid('g'),at:Date.now(),n:i+1,end:E,c,tp}}
 const spent=k=>sum(k.tx,t=>num(t.a));
+// Money still unspent in paycheck c's tags that count in its budget; an overspent tag counts as 0, not less
+const budLeft=c=>sum((c.cats||[]).filter(k=>k.g),k=>Math.max(0,num(k.b)-spent(k)));
 const accTot=a=>sum(a.tx,t=>num(t.a));
 const cOwed=c=>num(c.bal)+sum(c.tx||[],t=>num(t.a)),cAvail=c=>num(c.limit)-cOwed(c);
 const payAmt=(l,p)=>p.a==null?num(l.amt):num(p.a);
@@ -418,11 +420,11 @@ function hello(){const h=new Date().getHours(),g=h<5?'Up late':h<12?'Good mornin
  const n=dayDiff(nx);return `<div class="hello"><b>${g}</b><span>${n<=0?'Payday today':n==1?'Payday tomorrow':n+' days to payday'}</span></div>`}
 function vHome(){
  const c=S.checks[K],r=calc(c),E=chkEnd(K);
- const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`;
+ const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`,bl=budLeft(c);
  const bar=(p,bad)=>`<div class="bar" style="margin-bottom:4px"><i style="width:${Math.min(100,p)}%;background:${bad?'var(--neg)':'var(--ac)'}"></i></div>`;
  const {un,due,tot:toPay}=toPayOf(K),lr=Math.round(r.roll*100);
  return hello()+(S.set.welcome?welcome():'')+bkNag()+SEG()+`<button class="x delchk" data-a="delChk">Delete this paycheck</button>`+subWarn()
- +`<div class="tiles">${tile('Left',r.roll,lr>0?'good':lr<0?'bad':'zero')}${tile('Still to pay',toPay,Math.round(toPay*100)>0?'due':'good')}</div>
+ +`<div class="tiles">${tile('Still to pay',toPay,Math.round(toPay*100)>0?'due':'good')}${tile('Budget left',bl,Math.round(bl*100)>0?'bud':'zero')}${tile('Left',r.roll,(lr>0?'good':lr<0?'bad':'zero')+' full')}</div>
  <div class="card wide"><h3><span>Where this paycheck goes</span></h3><div class="bp"><div><span class="mu">Budget</span>${N(r.budget)}</div><div><span class="mu">Planned</span>${N(r.exp)}</div></div>${pieSvg(c,r)}</div>
  <div class="card"><div class="sec">50 / 30 / 20</div>${G.map(g=>{const t=r.inc*TG[g],a=r.by[g];return `<div class="ln"><span>${g}</span><b class="${a>t?'neg':''}">${$$(a)} / ${$$(t)}</b></div>${bar(t?a/t*100:0,a>t)}`}).join('')}</div>
  <div class="card"><div class="sec">Left to spend</div>${c.cats.map(k=>{const rem=k.b-spent(k);return `<div class="ln"><span>${esc(k.n)}</span><b class="${cl(rem)}">${$$(rem)}</b></div>${rbar(k.b,rem)}`}).join('')}</div>
@@ -565,14 +567,14 @@ function logsCard(){const L=[...S.logs].sort((a,b)=>a.c.date<b.c.date?1:a.c.date
  +(L.length?L.map(g=>`<button class="lgrow" data-a="openLog" data-id="${esc(g.id)}"><span>${fd(g.c.date)} – ${fd(logEndDay(g))}, ${new Date(g.c.date+'T00:00').getFullYear()}<span class="mu">Removed ${longDate(logExp(g))}</span></span><b class="${cl(calc(g.c).roll)}">${$$(calc(g.c).roll)}</b><i aria-hidden="true">›</i></button>`).join('')
  :'<p class="mu" style="margin:0">None yet. When you delete a paycheck, choose Log and delete to keep a copy here.</p>')+`</div>`}
 function vLog(g){const c=g.c,r=calc(c),tp=sum(g.tp,x=>x[1]),lr=Math.round(r.roll*100);
- const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`;
+ const tile=(l,v,st)=>`<div class="tile ${st}"><div class="mu">${l}</div>${N(v)}</div>`,bl=budLeft(c);
  const k=(l,v,cls)=>`<div class="k"><span class="mu">${l}</span>${N(v,cls||'','span')}</div>`;
  const tag=x=>x.loan?'<span class="tag debt">DEBT</span>':x.sub?'<span class="tag sub">SUB</span>':x.cat?'<span class="tag">TAG</span>':'';
  const item=x=>`<div class="lrow ${x.paid?'pd':''}"><span>${esc(x.n||'Untitled')}</span>${tag(x)}<b>${$$(num(x.a))}</b><span class="mu lst">${x.paid?'Paid':'Unpaid'}</span></div>`;
  const tx=t=>`<div class="ln"><span>${fd(t.d)} · ${esc(t.t||'—')}</span><b>${$$(num(t.a))}</b></div>`;
  let h=`<button class="g lback" data-a="logBack">‹ Settings</button>
  <div class="card wide"><span class="rob">Logged · read-only</span><h2 style="margin:0">Paycheck ${g.n}</h2><div class="b">${longDate(c.date)} – ${longDate(logEndDay(g))}</div><p class="mu" style="margin:6px 0 0">Saved ${longDate(iso(new Date(g.at)))}. Removed automatically on ${longDate(logExp(g))}.</p></div>
- <div class="tiles">${tile('Left',r.roll,lr>0?'good':lr<0?'bad':'zero')}${tile('Still to pay',tp,Math.round(tp*100)>0?'due':'good')}</div>
+ <div class="tiles">${tile('Still to pay',tp,Math.round(tp*100)>0?'due':'good')}${tile('Budget left',bl,Math.round(bl*100)>0?'bud':'zero')}${tile('Left',r.roll,(lr>0?'good':lr<0?'bad':'zero')+' full')}</div>
  <div class="card"><h3><span>Paycheck</span></h3>${num(c.rate)?`<div class="k"><span class="mu">Rate × hours</span><span>${$$(num(c.rate))} × ${num(c.hours)} = ${$$(c.rate*c.hours)}</span></div>`:''}
  ${k('Take-home pay',c.net)}${k('Extra income',r.ex)}${k('Prev. rollover',c.prev)}${k('Adjustments',c.adj)}<hr style="border:0;border-top:1px solid var(--bd)">
  <div class="k"><span>Final budget</span>${N(r.budget)}</div><div class="k"><span>Expenses</span>${N(r.exp)}</div><div class="k"><span>Already paid</span>${N(r.paid,'','span')}</div><div class="k"><span>Rollover</span>${N(r.roll,cl(r.roll))}</div></div>
