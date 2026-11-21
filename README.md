@@ -9,6 +9,9 @@ Part of the Big apps, with [Big Saucy Recipes](https://github.com/dontdoubtdusty
 [Big Shiny Rounds](https://github.com/dontdoubtdusty/cleaning) and [Big Healthy Habits](https://github.com/dontdoubtdusty/habits);
 [Big Juicy Suite](https://github.com/dontdoubtdusty/suite) holds them all in one place.
 
+<img src="docs/screenshot-home.png" alt="Home tab in light theme: the paycheck, its four tiles and where the money goes" width="320">
+<img src="docs/screenshot-subs.png" alt="Subs tab in dark theme: monthly and yearly totals, what is due this paycheck and what is coming up" width="320">
+
 ## Install
 
 1. Open https://dontdoubtdusty.github.io/budget/ in your browser.
