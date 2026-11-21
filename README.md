@@ -1,57 +1,47 @@
 # Big Minty Finances
 
-Paycheck-by-paycheck budgeting that runs in your browser. It's part of the Big apps, alongside [Big Saucy Recipes](https://github.com/dontdoubtdusty/cooking), [Big Skinny Health](https://github.com/dontdoubtdusty/diet), [Big Tidy Reminders](https://github.com/dontdoubtdusty/reminders), [Big Shiny Rounds](https://github.com/dontdoubtdusty/cleaning) and [Big Healthy Habits](https://github.com/dontdoubtdusty/habits). You can also open it inside [Big Juicy Suite](https://github.com/dontdoubtdusty/suite), which holds all the Big apps in one place. It's one file (`index.html`) with no build step and no server.
+Paycheck-by-paycheck budgeting in your browser. Every paycheck gets its own budget, and bills, loan payments and
+subscriptions land in the paycheck they are due in, so you always see what is still to pay and what is left. Includes
+spending tags, bank accounts, credit cards and loans, subscriptions with reminders, backups and optional sync.
 
-## Features
+Part of the Big apps, with [Big Saucy Recipes](https://github.com/dontdoubtdusty/cooking),
+[Big Skinny Health](https://github.com/dontdoubtdusty/diet), [Big Tidy Reminders](https://github.com/dontdoubtdusty/reminders),
+[Big Shiny Rounds](https://github.com/dontdoubtdusty/cleaning) and [Big Healthy Habits](https://github.com/dontdoubtdusty/habits);
+[Big Juicy Suite](https://github.com/dontdoubtdusty/suite) holds them all in one place.
 
-- A budget for each paycheck, with pay, deductions, extra income, rollover and adjustments
-- Logged paychecks: when you delete a paycheck you can keep a read-only copy under **Settings → Logged paychecks**. Each one is removed automatically six months after its pay date.
-- Needs, wants and savings tracked against a 50/30/20 split
-- Spending categories with their own budgets, and an Add tab for logging spending, card charges and income quickly
-- Bank accounts with deposits, withdrawals and monthly change, plus **Reset history** to archive an account's old transactions and start fresh from its current balance (with Undo)
-- Credit cards and installment loans, with loan payments added to the paycheck they're due in
-- Subscriptions, added to the paycheck they're due in, with reminders when they come up. If a charge lands on a different day than expected, set the next charge date by hand and it moves to the right paycheck
-- Light, dark and automatic themes, plus a Day/Night option that switches to dark at 6pm and back to light at 6am
-- Light haptic ticks when you save, delete, finish or toggle something, and buttons that visibly press in on every tap. Turn haptics off under **Settings > Haptics**.
-- Backups you can share, download and import, with a weekly reminder
-- Optional sync across devices with an email sign-in
+## Install
 
-## Using it
+1. Open https://dontdoubtdusty.github.io/budget/ in your browser.
+2. Add it to your home screen:
+   - iPhone or iPad (Safari): tap **Share**, then **Add to Home Screen**.
+   - Android (Chrome): tap the menu, then **Install app** (or **Add to Home screen**).
+   - Computer (Chrome or Edge): click the install icon at the right end of the address bar.
+3. Open it from the new icon. It runs full screen and works without internet.
 
-Turn on GitHub Pages for this repo (**Settings → Pages → Deploy from a branch → `main` / root**) and open the link it gives you. You can also open `index.html` straight from your computer, but installing and offline use only work from the GitHub Pages link.
+On iPhone, the home-screen app and the same page in Safari keep separate data. Pick one and stick with it, or move
+your data with a backup.
 
-### Install it as an app
+Updates: nothing to do. The app checks for a newer copy each time it opens online.
 
-- **iPhone or iPad (Safari):** tap Share, then **Add to Home Screen**.
-- **Android (Chrome):** tap the ⋮ menu, then **Install app** (or **Add to Home screen**).
-- **Computer (Chrome or Edge):** click the install icon at the right end of the address bar.
+Uninstall: remove the icon, then clear the site data for `dontdoubtdusty.github.io` in your browser settings. Make a
+backup first (**Settings > Download backup**) if you want to keep your budget.
 
-Once it's installed, it opens full screen with its own icon and works without an internet connection.
+## Usage
 
-### Files
+The bar at the bottom has Home (still to pay, budget left and what is left this paycheck), Budget, Tags, Add (log
+spending, card charges and income quickly), Banks, Debt and Subs. The gear at the top opens Settings: theme (light,
+dark, automatic, or Day/Night, dark from 6pm to 6am), haptics, backups, logged paychecks and sync. Everything saves
+as you go.
 
-| File | What it does |
-| --- | --- |
-| `index.html` | The whole app |
-| `sync.js` | Optional sync across devices (shared by all the Big apps) |
-| `feedback.js` | Haptic ticks and button press feedback (shared by all the Big apps) |
-| `manifest.webmanifest` | The app's name, colors and icons, used when it's installed |
-| `sw.js` | Saves a copy of the app so it opens offline |
-| `icon-192.png`, `icon-512.png`, `apple-touch-icon.png` | The app icon at each size browsers and phones ask for |
+To move your budget to another device or browser, use **Settings > Share backup** (or **Download backup**) there and
+**Import backup file** here, or sign in under **Settings > Sync across devices** on both.
 
-**When you update the app:** nothing extra to do. The app always checks for a newer copy first and only falls back to the saved one when you're offline.
+## Known limits
 
-## Your data
-
-Everything you enter is saved in your browser's `localStorage` on your device, and none of it is stored in this repository.
-
-Each website address keeps its own separate storage, so your budget doesn't follow you to a new address or device by itself. On iPhone, the home-screen app also keeps separate storage from the same page opened in Safari. Two ways to move it:
-
-- **Backup:** go to **Settings → Share backup** (or **Download backup**) in the old place, then **Import backup file** in the new one.
-- **Sync:** sign in under **Settings → Sync across devices** on each device. Your budget is then also kept in the Big apps' Firebase database under your account. Sync is off until you sign in.
-
-## Credits
-
-The fonts are [Fredoka](https://fonts.google.com/specimen/Fredoka) and [Nunito](https://fonts.google.com/specimen/Nunito), loaded from Google Fonts.
-
-The take-home estimate is a rough guide, not tax advice.
+- Your data lives only in this browser on this device until you back it up or turn on sync. Clearing site data
+  deletes it.
+- Sync keeps a copy of your budget in the Big apps' Firebase database under your account; it is off until you sign in.
+- Deleted paychecks kept under **Settings > Logged paychecks** are read-only and removed six months after their pay
+  date, on purpose.
+- The take-home pay estimate is a rough guide, not tax advice.
+- Sign-in, sync and the first load need internet; everything else works offline.
